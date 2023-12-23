@@ -1,0 +1,9 @@
+sequenceDiagram
+participant Browser
+participant Server
+
+note right of Browser: Browser rerenders the list of notes after adding the note that was just created by the user
+Browser->>Server: POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa (user input)
+activate Server
+Server-->>Browser: HTTP Status Code: 201 Created
+deactivate Server
