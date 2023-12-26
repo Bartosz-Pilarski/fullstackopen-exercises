@@ -33,7 +33,7 @@ const Content = ({part1, exercises1, part2, exercises2, part3, exercises3}) => {
 }
 
 const Total = ({exercises}) => {
-  var sum = 0;
+  let sum = 0;
   for (let index = 0; index < exercises.length; index++) {
     sum += exercises[index];
   }
