@@ -8,7 +8,7 @@ const Button = ({text, onClick}) => {
 
 const StatDisplay = ({text, stat}) => {
   return (
-    <p> {text} {stat} </p>
+    <tr> <td>{text}</td> <td>{stat}</td> </tr>
   )
 } 
 
@@ -23,15 +23,23 @@ const Statistics = ({good, neutral, bad}) => {
 
   const calculatePositivePercentage = () => {return (good/voteSum)*100+"%"}
 
+  if(voteSum === 0) { return (
+    <div>
+      <h1>statistics</h1>
+        <p> no feedback given </p>
+    </div>
+  ) }
   return (
     <div>
         <h1>statistics</h1>
-          <StatDisplay text="good" stat={good}/>
-          <StatDisplay text="neutral" stat={neutral}/>
-          <StatDisplay text="bad" stat={bad}/>
-          <StatDisplay text="all" stat={voteSum}/>
-          <StatDisplay text="average" stat={calculateAverageFeedback()}/>
-          <StatDisplay text="positive" stat={calculatePositivePercentage()}/>
+          <table>
+            <StatDisplay text="good" stat={good}/>
+            <StatDisplay text="neutral" stat={neutral}/>
+            <StatDisplay text="bad" stat={bad}/>
+            <StatDisplay text="all" stat={voteSum}/>
+            <StatDisplay text="average" stat={calculateAverageFeedback()}/>
+            <StatDisplay text="positive" stat={calculatePositivePercentage()}/>
+          </table>
     </div>
   )
 }
