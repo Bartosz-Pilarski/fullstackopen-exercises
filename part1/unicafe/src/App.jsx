@@ -8,7 +8,7 @@ const Button = ({text, onClick}) => {
 
 const StatDisplay = ({text, stat}) => {
   return (
-    <tr> <td>{text}</td> <td>{stat}</td> </tr>
+    <tr><td>{text}</td><td>{stat}</td></tr>
   )
 } 
 
@@ -33,12 +33,14 @@ const Statistics = ({good, neutral, bad}) => {
     <div>
         <h1>statistics</h1>
           <table>
-            <StatDisplay text="good" stat={good}/>
-            <StatDisplay text="neutral" stat={neutral}/>
-            <StatDisplay text="bad" stat={bad}/>
-            <StatDisplay text="all" stat={voteSum}/>
-            <StatDisplay text="average" stat={calculateAverageFeedback()}/>
-            <StatDisplay text="positive" stat={calculatePositivePercentage()}/>
+            <tbody>
+              <StatDisplay text="good" stat={good}/>
+              <StatDisplay text="neutral" stat={neutral}/>
+              <StatDisplay text="bad" stat={bad}/>
+              <StatDisplay text="all" stat={voteSum}/>
+              <StatDisplay text="average" stat={calculateAverageFeedback()}/>
+              <StatDisplay text="positive" stat={calculatePositivePercentage()}/>
+            </tbody>
           </table>
     </div>
   )
