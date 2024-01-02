@@ -19,20 +19,24 @@ const App = () => {
   const [bad, setBad] = useState(0)
 
   const handleGoodFeedback = () => {
-    console.log("good :)")
-    console.log("State (good) before updating: ", good)
     setGood(good+1)
   }
   const handleNeutralFeedback = () => {
-    console.log("neutral :|")
-    console.log("State (neutral) before updating: ", neutral)
     setNeutral(neutral+1)
   }
   const handleBadFeedback = () => {
-    console.log("bad :(")
-    console.log("State (bad) before updating: ", bad)
     setBad(bad+1)
   }
+
+  const voteSum = good+neutral+bad;
+
+  const calculateAverageFeedback = () => {
+    const sum = (good*1)+(bad*-1)
+    console.log("Sum: ", sum, "Vote sum: ", voteSum);
+    return sum/voteSum
+  }
+
+  const calculatePositivePercentage = () => {return (good/voteSum)*100+"%"}
 
   return (
     <div>
@@ -44,6 +48,9 @@ const App = () => {
         <StatDisplay text="good" stat={good}/>
         <StatDisplay text="neutral" stat={neutral}/>
         <StatDisplay text="bad" stat={bad}/>
+        <StatDisplay text="all" stat={voteSum}/>
+        <StatDisplay text="average" stat={calculateAverageFeedback()}/>
+        <StatDisplay text="positive" stat={calculatePositivePercentage()}/>
     </div>
   )
 }
