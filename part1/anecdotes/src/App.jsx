@@ -6,6 +6,36 @@ const Button = ({text, onClick}) => {
   )
 }
 
+const TopAnecdote = ({anecdotes, votes}) => {
+  const mostVoted = () => {
+    let mostVotedIndex = 0
+    let mostVotes = 0
+    votes.forEach((value, index) => {
+      if(value > mostVotes) {
+        mostVotedIndex = index
+        mostVotes = value
+      }
+    })
+    return [mostVotedIndex, mostVotes]
+  }
+
+  //To not run the same function twice later
+  const [mostVotedIndex, mostVotes] = mostVoted()
+
+  if(mostVotes === 0) return (
+    <div>
+      <h1>Anecdote with the most votes</h1>
+      <p>no votes cast yet</p>
+    </div>
+  )
+  return ( 
+    <div>
+      <h1>Anecdote with the most votes</h1>
+      {anecdotes[mostVotedIndex]}
+      <p> has {votes[mostVotedIndex]} votes</p>
+    </div>
+  )
+}
 
 const App = () => {
   const anecdotes = [
@@ -28,15 +58,18 @@ const App = () => {
     votesCopy[selected] = votesCopy[selected]+1
     setVotes(votesCopy)
   }
-
+  
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       {anecdotes[selected]}
       <br />
       this anecodte has {votes[selected]} votes
       <br />
       <Button text="next anecdote" onClick={handleNextAnecdote}/>
       <Button text="vote" onClick={handleVote}/>
+
+      <TopAnecdote anecdotes={anecdotes} votes={votes}/>
     </div>
   )
 }
