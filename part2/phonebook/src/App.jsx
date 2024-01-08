@@ -8,6 +8,9 @@ const App = () => {
 
   const handlePersonSubmit = (event) => {
     event.preventDefault();
+    //find the first element with the same name. true if exists.
+    if(persons.find((person) => person.name === newName ) !== undefined) return alert(`${newName} is already a contact!`)
+
     setPersons(persons.concat({name: newName}))
   }
 
