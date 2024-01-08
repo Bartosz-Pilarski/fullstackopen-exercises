@@ -9,6 +9,7 @@ const App = () => {
   ]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [searchInput, setSearchInput] = useState('')
 
   const handlePersonSubmit = (event) => {
     event.preventDefault();
@@ -20,11 +21,29 @@ const App = () => {
 
   const handleNewNameChange = (event) => { setNewName(event.target.value) }
   const handleNewNumberChange = (event) => { setNewNumber(event.target.value) }
+  const handleSearchInput = (event) => {
+    const currentInput = event.target.value 
+    setSearchInput(currentInput) 
+  }
 
   return (
     <div>
-      <h2>Phonebook</h2>
-      <div>Ahoy! {persons.map((person) => (<p key={person.id}> {person.name} <br/> {person.number} </p>))}</div>
+      <h1>Phonebook</h1>
+      <h2> Search </h2>
+        <div>
+          search: <input value={searchInput} onChange={handleSearchInput}/>
+        </div>
+      <h2> Contacts </h2>
+      <div>
+        {
+        //This could probably be handled better by a separate contacts component.
+        searchInput !== '' 
+        ? persons.map((person) => {
+          if(searchInput.toLowerCase() === person.name.substring(0, searchInput.length).toLowerCase()) return (<p key={person.id}> {person.name} <br /> {person.number} </p>)
+        })
+        : persons.map((person) => (<p key={person.id}> {person.name} <br /> {person.number} </p>))
+        }
+      </div>
       <form onSubmit={handlePersonSubmit}>
         <div>
           name: <input value={newName} onChange={handleNewNameChange}/>
