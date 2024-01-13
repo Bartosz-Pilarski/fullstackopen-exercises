@@ -8,20 +8,27 @@ const getAllContacts = () => {
     return request.then(response => response.data)
 }
 
-//POSTs a new contact object to the server, returns the response's data
+//POSTs a new contact resource to the server, returns the response's data
 const createContact = (newContact) => {
     const request = axios.post(baseUrl, newContact)
     return request.then(response => response.data)
 }
 
-//replaces an existing contact object, identified using id, with the one passed as newContactData, returns the response's data
+//replaces an existing contact resource, identified using id, with the object passed as newContactData, returns the response's data
 const editContact = (contactId, newContactData) => {
     const request = axios.put(`${baseUrl}/${contactId}`, newContactData)
+    return request.then(response => response.data)
+}
+
+//deletes an existing contact resource, identified using id, returns the response's data
+const deleteContact = (contactId) => {
+    const request = axios.delete(`${baseUrl}/${contactId}`)
     return request.then(response => response.data)
 }
 
 export default {
     getAllContacts,
     createContact,
-    editContact
+    editContact,
+    deleteContact
 }

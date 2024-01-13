@@ -1,9 +1,23 @@
 import { useEffect, useState } from 'react'
 import phonebookService from './services/phonebook'
 
-const Person = ({person}) => (<p> {person.name} <br /> {person.number} </p>) 
 
-const Contacts = ({persons, searchInput}) => {
+const Person = ({person, handleDeletePerson}) => (<p> {person.name} <br /> {person.number} <br /> <DeletePersonButton id={person.id} handleDeletePerson={handleDeletePerson}/> </p>) 
+const DeletePersonButton = ({id, handleDeletePerson}) => {
+  return (<button onClick={() => handleDeletePerson(id)}> delete </button>)
+}
+
+const Contacts = ({persons, setPersons, searchInput}) => {
+
+  const handleDeletePerson = (id) => {
+    if(!window.confirm("Do you really want to delete this contact?")) return
+    phonebookService
+      .deleteContact(id)
+      .then(response => {
+        setPersons(persons.filter(person => person.id !== id))
+      })
+  }
+
   return (
     <div>
       <h2>Numbers</h2>
@@ -11,11 +25,11 @@ const Contacts = ({persons, searchInput}) => {
         {
         searchInput !== '' 
         ? persons.map((person) => {
-          if(searchInput.toLowerCase() === person.name.substring(0, searchInput.length).toLowerCase()) return (<Person key={person.id} person={person}/>)
+          if(searchInput.toLowerCase() === person.name.substring(0, searchInput.length).toLowerCase()) return (<Person key={person.id} person={person} handleDeletePerson={handleDeletePerson}/>)
         })
         // The check inside the key prop is required for submitting a new contact. 
         // The new contact does not actually have an id value until it's fetched from the server later, but needs to be rendered.
-        : persons.map((person) => <Person key={person.id === undefined ? persons.length : person.id} person={person}/>)
+        : persons.map((person) => <Person key={person.id === undefined ? persons.length : person.id} person={person} handleDeletePerson={handleDeletePerson}/>)
         }
       </div>
     </div>
@@ -80,7 +94,6 @@ const App = () => {
   const [searchInput, setSearchInput] = useState('')
 
   useEffect(() => {
-
     phonebookService
     .getAllContacts()
     .then((response) => setPersons(response))
@@ -92,7 +105,7 @@ const App = () => {
       <Search searchInput={searchInput} setSearchInput={setSearchInput}/>
       <br />
       <ContactForm persons={persons} setPersons={setPersons}/>
-      <Contacts persons={persons} searchInput={searchInput}/>
+      <Contacts persons={persons} setPersons={setPersons} searchInput={searchInput}/>
     </div>
   )
 }
