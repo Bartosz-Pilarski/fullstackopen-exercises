@@ -32,7 +32,17 @@ const ContactForm = ({persons, setPersons}) => {
     //find the first element with the same name. true if exists.
     if(persons.find((person) => person.name === newName ) !== undefined) return alert(`${newName} is already a contact!`)
 
-    setPersons(persons.concat({name: newName, number: newNumber, id:(persons.length+1)}))
+    const newPerson = {name: newName, number: newNumber}
+
+    //For some reason, this post request creates a random string id value, instead of just an autoincrementing int.
+    //I tried to fix it by making sure all users in the database start with a numerical id as the first value in their resource but to no avail.
+    //Hopefully this doesn't have any side effects.
+    axios
+      .post("http://localhost:3001/persons", newPerson)
+      .then((response) => {
+        console.log(response);
+        //setPersons(persons.concat(newPerson))
+      })
   }
 
   return (
@@ -75,7 +85,6 @@ const App = () => {
     axios
     .get("http://localhost:3001/persons")
     .then((response) => {
-      console.log(response.data);
       setPersons(response.data)
     })
   }, [])
