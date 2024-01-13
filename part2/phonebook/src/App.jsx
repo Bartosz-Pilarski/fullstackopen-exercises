@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
+import phonebookService from './services/phonebook'
 
 const Person = ({person}) => (<p> {person.name} <br /> {person.number} </p>) 
 
@@ -13,7 +13,9 @@ const Contacts = ({persons, searchInput}) => {
         ? persons.map((person) => {
           if(searchInput.toLowerCase() === person.name.substring(0, searchInput.length).toLowerCase()) return (<Person key={person.id} person={person}/>)
         })
-        : persons.map((person) => <Person key={person.id} person={person}/>)
+        // The check inside the key prop is required for submitting a new contact. 
+        // The new contact does not actually have an id value until it's fetched from the server later, but needs to be rendered.
+        : persons.map((person) => <Person key={person.id === undefined ? persons.length : person.id} person={person}/>)
         }
       </div>
     </div>
@@ -34,14 +36,10 @@ const ContactForm = ({persons, setPersons}) => {
 
     const newPerson = {name: newName, number: newNumber}
 
-    //For some reason, this post request creates a random string id value, instead of just an autoincrementing int.
-    //I tried to fix it by making sure all users in the database start with a numerical id as the first value in their resource but to no avail.
-    //Hopefully this doesn't have any side effects.
-    axios
-      .post("http://localhost:3001/persons", newPerson)
-      .then((response) => {
-        console.log(response);
-        //setPersons(persons.concat(newPerson))
+    phonebookService
+      .createContact(newPerson)        
+      .then(response => {
+        setPersons(persons.concat(newPerson))
       })
   }
 
@@ -82,11 +80,10 @@ const App = () => {
   const [searchInput, setSearchInput] = useState('')
 
   useEffect(() => {
-    axios
-    .get("http://localhost:3001/persons")
-    .then((response) => {
-      setPersons(response.data)
-    })
+
+    phonebookService
+    .getAllContacts()
+    .then((response) => setPersons(response))
   }, [])
 
   return (

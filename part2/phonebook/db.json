@@ -16,14 +16,29 @@
       "id": 3
     },
     {
+      "id": 4,
       "name": "Mary Poppendieck",
-      "number": "39-23-6423122",
-      "id": 4
+      "number": "39-23-6423122"
     },
     {
       "name": "Captain Morgan",
       "number": "123-321",
       "id": 5
+    },
+    {
+      "name": "Bazinga",
+      "number": "321-321",
+      "id": 6
+    },
+    {
+      "name": "Cursed Woody",
+      "number": "696969",
+      "id": 7
+    },
+    {
+      "name": "Black Prior",
+      "number": "96669",
+      "id": 8
     }
   ]
 }
