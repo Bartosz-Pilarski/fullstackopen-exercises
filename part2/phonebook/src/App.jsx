@@ -64,6 +64,10 @@ const ContactForm = ({persons, setPersons, newName, setNewName, newNumber, setNe
       .then(response => {
         setPersons(persons.map((person) => person.id === existingPerson.id ? response : person))
       })
+      .catch(error => {
+        alert(`${person.name} was already removed`)
+        setPersons(persons.filter(person => person.id !== id))
+      })
       return
     }
     phonebookService
