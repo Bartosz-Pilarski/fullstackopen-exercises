@@ -10,6 +10,10 @@ const Person = ({person, persons, setPersons}) => {
       .then(response => {
         setPersons(persons.filter(person => person.id !== id))
       })
+      .catch(error => {
+        alert(`${person.name} was already removed`)
+        setPersons(persons.filter(person => person.id !== id))
+      })
   }
   return (
     <p> 
