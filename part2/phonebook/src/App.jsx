@@ -2,13 +2,7 @@ import { useEffect, useState } from 'react'
 import phonebookService from './services/phonebook'
 
 
-const Person = ({person, handleDeletePerson}) => (<p> {person.name} <br /> {person.number} <br /> <DeletePersonButton id={person.id} handleDeletePerson={handleDeletePerson}/> </p>) 
-const DeletePersonButton = ({id, handleDeletePerson}) => {
-  return (<button onClick={() => handleDeletePerson(id)}> delete </button>)
-}
-
-const Contacts = ({persons, setPersons, searchInput}) => {
-
+const Person = ({person, persons, setPersons}) => {
   const handleDeletePerson = (id) => {
     if(!window.confirm("Do you really want to delete this contact?")) return
     phonebookService
@@ -17,7 +11,21 @@ const Contacts = ({persons, setPersons, searchInput}) => {
         setPersons(persons.filter(person => person.id !== id))
       })
   }
+  return (
+    <p> 
+      {person.name} 
+      <br /> 
+      {person.number} 
+      <br /> 
+      <DeletePersonButton id={person.id} handleDeletePerson={() => handleDeletePerson(person.id)}/> 
+    </p>
+    )}
 
+const DeletePersonButton = ({id, handleDeletePerson}) => {
+  return (<button onClick={() => handleDeletePerson(id)}> delete </button>)
+}
+
+const Contacts = ({persons, setPersons, searchInput}) => {
   return (
     <div>
       <h2>Numbers</h2>
@@ -25,35 +33,39 @@ const Contacts = ({persons, setPersons, searchInput}) => {
         {
         searchInput !== '' 
         ? persons.map((person) => {
-          if(searchInput.toLowerCase() === person.name.substring(0, searchInput.length).toLowerCase()) return (<Person key={person.id} person={person} handleDeletePerson={handleDeletePerson}/>)
+          if(searchInput.toLowerCase() === person.name.substring(0, searchInput.length).toLowerCase()) return (<Person key={person.id} person={person} persons={persons} setPersons={setPersons}/>)
         })
-        // The check inside the key prop is required for submitting a new contact. 
-        // The new contact does not actually have an id value until it's fetched from the server later, but needs to be rendered.
-        : persons.map((person) => <Person key={person.id === undefined ? persons.length : person.id} person={person} handleDeletePerson={handleDeletePerson}/>)
+        : persons.map((person) => <Person key={person.id} person={person} persons={persons} setPersons={setPersons}/>)
         }
       </div>
     </div>
   )
 }
 
-const ContactForm = ({persons, setPersons}) => {
-  const [newName, setNewName] = useState('')
-  const [newNumber, setNewNumber] = useState('')
+const ContactForm = ({persons, setPersons, newName, setNewName, newNumber, setNewNumber}) => {
 
   const handleNewNameChange = (event) => { setNewName(event.target.value) }
   const handleNewNumberChange = (event) => { setNewNumber(event.target.value) }
 
   const handlePersonSubmit = (event) => {
     event.preventDefault();
-    //find the first element with the same name. true if exists.
-    if(persons.find((person) => person.name === newName ) !== undefined) return alert(`${newName} is already a contact!`)
-
     const newPerson = {name: newName, number: newNumber}
+    //find the first element with the same name. true if exists.
+    const existingPerson = persons.find((person) => person.name === newName )
+    if(existingPerson !== undefined) {
+      if(!confirm(`${newName} is already a contact! Replace old number?`)) return 
 
+      phonebookService
+      .editContact(existingPerson.id, newPerson)        
+      .then(response => {
+        setPersons(persons.map((person) => person.id === existingPerson.id ? response : person))
+      })
+      return
+    }
     phonebookService
       .createContact(newPerson)        
       .then(response => {
-        setPersons(persons.concat(newPerson))
+        setPersons(persons.concat(response))
       })
   }
 
@@ -92,11 +104,15 @@ const Search = ({searchInput, setSearchInput}) => {
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [searchInput, setSearchInput] = useState('')
+  const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
 
   useEffect(() => {
     phonebookService
     .getAllContacts()
-    .then((response) => setPersons(response))
+    .then((response) => {
+      setPersons(response)
+    })
   }, [])
 
   return (
@@ -104,7 +120,7 @@ const App = () => {
       <h1>Phonebook</h1>
       <Search searchInput={searchInput} setSearchInput={setSearchInput}/>
       <br />
-      <ContactForm persons={persons} setPersons={setPersons}/>
+      <ContactForm persons={persons} setPersons={setPersons} newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber}/>
       <Contacts persons={persons} setPersons={setPersons} searchInput={searchInput}/>
     </div>
   )
