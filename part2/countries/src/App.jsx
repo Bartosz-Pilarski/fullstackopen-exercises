@@ -11,9 +11,14 @@ const Search = ({searchQuery, setSearchQuery}) => {
   )
 }
 
-const CountrySnippet = ({country}) => {
+/*
+  It's a bit of a shortcut to showing more details about the country, but it works
+  Can't really think of a situation where you'd need to keep your old search query while viewing the details
+  Otherwise, I reckon the whole application would need refactoring
+*/
+const CountrySnippet = ({country, setSearchQuery}) => {
   return (
-    <li> {country.name.common} </li>
+    <li> {country.name.common} <button onClick={() => setSearchQuery(country.name.common)}> Show more </button> </li> 
   )
 }
 
@@ -50,7 +55,7 @@ const CountryPanel = ({country}) => {
   )
 }
 
-const SearchResults = ({searchQuery, countries}) => {
+const SearchResults = ({searchQuery, setSearchQuery, countries}) => {
   if(searchQuery === "") return 
 
   /*
@@ -78,7 +83,7 @@ const SearchResults = ({searchQuery, countries}) => {
     <div>
       {matches.length > 10
       ? <p> Too many matches, please enter a more specific search </p>
-      : matches.map((country) => <CountrySnippet key={country.cca2} country={country}/>)}
+      : matches.map((country) => <CountrySnippet key={country.cca2} country={country} setSearchQuery={setSearchQuery}/>)}
     </div>
   )  
 }
@@ -100,7 +105,7 @@ const App = () => {
     <>
       <div>
         Find countries: <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery}/> 
-        <SearchResults searchQuery={searchQuery} countries={countries}/>
+        <SearchResults searchQuery={searchQuery} setSearchQuery={setSearchQuery} countries={countries}/>
       </div>
     </>
   )
