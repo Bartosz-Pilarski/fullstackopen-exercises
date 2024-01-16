@@ -22,10 +22,32 @@ const CountrySnippet = ({country, setSearchQuery}) => {
   )
 }
 
+const WeatherPanel = ({capitalLatitude, capitalLongitude, capitalName}) => {
+  const [temperature, setTemperature] = useState(null)
+
+  useEffect(() => {
+    axios
+      .get(`https://api.open-meteo.com/v1/forecast?latitude=${capitalLatitude}&longitude=${capitalLongitude}&current=temperature_2m`)
+      .then((response) => {
+        setTemperature(response.data.current.temperature_2m)
+      })
+  }, []) 
+
+  return (
+    <div>
+      <h2> Weather in {capitalName} </h2>
+      {!temperature 
+      ? (<></>)
+      : (<>{temperature}°C</>)}
+    </div>
+  )
+}
+
 const CountryPanel = ({country}) => {
   //for visibility with flags that have white in them
-  const flagBorderStyle = {
-    border: "2px solid black"
+  const flagStyle = {
+    border: "2px solid black",
+    height: "250px"
   }
 
   return (
@@ -50,7 +72,8 @@ const CountryPanel = ({country}) => {
           {Object.values(country.languages).map((language) => (<li key={language}>{language}</li>))}
         </ul>
       </div>
-      <img style={flagBorderStyle} src={country.flags.svg ? country.flags.svg : country.flags.png} alt={`Flag of ${country.name.common}`} />
+      <img style={flagStyle} src={country.flags.svg ? country.flags.svg : country.flags.png} alt={`Flag of ${country.name.common}`} />
+      <WeatherPanel capitalLatitude={country.capitalInfo.latlng[0]} capitalLongitude={country.capitalInfo.latlng[1]} capitalName={country.capital[0]}/>
     </div>
   )
 }
@@ -75,6 +98,14 @@ const SearchResults = ({searchQuery, setSearchQuery, countries}) => {
     return(
       <div>
         <CountryPanel country={matches[0]}/>
+      </div>
+    )
+  }
+
+  if(matches.length === 0) {
+    return(
+      <div>
+        <p>No countries match your search</p>
       </div>
     )
   }
