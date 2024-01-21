@@ -1,5 +1,6 @@
 const express = require("express")
 const morgan = require("morgan")
+const cors = require("cors")
 
 
 const app = express()
@@ -28,6 +29,7 @@ let persons = [
 ]
 
 app.use(express.json())
+app.use(express.static("dist"))
 
 morgan.token('reqbody', (req, res) => { if(req.method === "POST") return JSON.stringify(req.body) })
 
@@ -95,7 +97,7 @@ app.get("/info", (req, res) => {
     `)
 })
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Lookin' fer swashbucklers on port ${PORT}`)
 })

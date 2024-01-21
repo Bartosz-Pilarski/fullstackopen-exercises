@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const baseUrl = "http://localhost:3001/persons"
+const baseUrl = "/api/persons"
 
 //Fetches all contacts in the phonebook with a get request, returns the response's data
 const getAllContacts = () => {
