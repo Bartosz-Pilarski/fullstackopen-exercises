@@ -6,6 +6,7 @@ const cors = require("cors")
 const app = express()
 
 const Person = require("./models/person")
+const { error } = require("console")
 
 let persons = [
     { 
@@ -40,18 +41,23 @@ app.use(morgan(":method :url :status :res[content-length] - :response-time ms :r
 app.get("/api/persons", (req, res) => {
     Person.find({})
         .then((persons) => res.json(persons))
+        .catch((error) => next(error))
+        //I doubt this will ever throw an error but just to be sure
 })
 
-app.get("/api/persons/:id", (req, res) => {
+app.get("/api/persons/:id", (req, res, next) => {
     Person.findById(req.params.id)
-        .then((person) => res.json(person))
-        .catch((err) => res.status(404).end())
+        .then((person) => {
+            if(person) res.json(person)
+            else res.status(404).end()
+        })
+        .catch((error) => next(error))
 })
 
-app.delete("/api/persons/:id", (req, res) => {
+app.delete("/api/persons/:id", (req, res, next) => {
     Person.findByIdAndDelete(req.params.id)
         .then((result) => res.status(204).end())
-        .catch((error) => console.log(error.message))
+        .catch((error) => next(error))
 })
 
 app.post("/api/persons", (req, res) => {
@@ -61,7 +67,8 @@ app.post("/api/persons", (req, res) => {
         error: "Missing request content"
     })
 
-    Person.exists({ name: body.name.toLowerCase() }).then((result) => {
+    Person
+        .exists({ name: body.name.toLowerCase() }).then((result) => {
         if(result !== null) return res.status(400).json({
             error: "Name must be unique"
         })
@@ -71,6 +78,7 @@ app.post("/api/persons", (req, res) => {
         })
     
         person.save().then((person) => res.json(person))
+        .catch((error) => next(error))
     })
 })
 
@@ -87,6 +95,16 @@ app.get("/info", (req, res) => {
         </div>
     `)
 })
+
+const errorHandler = (error, request, response, next) => {
+    console.log(error.message)
+
+    if(error.name === "CastError") return response.status(400).send("Bad id formatting")
+
+    next(error)
+}
+
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
