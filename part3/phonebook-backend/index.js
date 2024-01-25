@@ -1,9 +1,11 @@
+require("dotenv").config()
 const express = require("express")
 const morgan = require("morgan")
 const cors = require("cors")
 
-
 const app = express()
+
+const Person = require("./models/person")
 
 let persons = [
     { 
@@ -30,22 +32,20 @@ let persons = [
 
 app.use(express.json())
 app.use(express.static("dist"))
+app.use(cors())
 
 morgan.token('reqbody', (req, res) => { if(req.method === "POST") return JSON.stringify(req.body) })
-
 app.use(morgan(":method :url :status :res[content-length] - :response-time ms :reqbody"))
 
 app.get("/api/persons", (req, res) => {
-    res.json(persons)
+    Person.find({})
+        .then((persons) => res.json(persons))
 })
 
 app.get("/api/persons/:id", (req, res) => {
-    const id = Number(req.params.id)
-
-    const person = persons.find((person) => person.id === id)
-    if(!person) return res.status(404).end()
-    
-    res.json(person)
+    Person.findById(req.params.id)
+        .then((person) => res.json(person))
+        .catch((err) => res.status(404).end())
 })
 
 app.delete("/api/persons/:id", (req, res) => {
@@ -57,7 +57,6 @@ app.delete("/api/persons/:id", (req, res) => {
 
 const generateId = (min = 1, max = 999999) => {
     return Math.floor(Math.random()*max)+min
-
 }
 
 app.post("/api/persons", (req, res) => {
