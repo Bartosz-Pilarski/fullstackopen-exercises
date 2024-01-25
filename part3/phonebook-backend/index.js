@@ -55,31 +55,24 @@ app.delete("/api/persons/:id", (req, res) => {
     res.status(204).end()
 })
 
-const generateId = (min = 1, max = 999999) => {
-    return Math.floor(Math.random()*max)+min
-}
-
 app.post("/api/persons", (req, res) => {
-    const id = generateId()
     const body = req.body
     
     if(!body.name || !body.number) return res.status(400).json({
         error: "Missing request content"
     })
 
-    if(persons.find((person) => person.name.toLowerCase() === body.name.toLowerCase())) return res.status(400).json({
-        error: "Name must be unique"
-    })
+    Person.exists({ name: body.name.toLowerCase() }).then((result) => {
+        if(result !== null) return res.status(400).json({
+            error: "Name must be unique"
+        })
+        const person = new Person({
+            "name": body.name,
+            "number": body.number
+        })
     
-    const person = {
-        "id": id,
-        "name": body.name,
-        "number": body.number
-    }
-
-    persons = persons.concat(person)
-
-    res.json(person)
+        person.save().then((person) => res.json(person))
+    })
 })
 
 app.get("/info", (req, res) => {
