@@ -68,16 +68,17 @@ app.post("/api/persons", (req, res) => {
     })
 
     Person
-        .exists({ name: body.name.toLowerCase() }).then((result) => {
-        if(result !== null) return res.status(400).json({
-            error: "Name must be unique"
-        })
-        const person = new Person({
-            "name": body.name,
-            "number": body.number
-        })
-    
-        person.save().then((person) => res.json(person))
+        .exists({ name: body.name.toLowerCase() })
+        .then((result) => {
+            if(result !== null) return res.status(400).json({
+                error: "Name must be unique"
+            })
+            const person = new Person({
+                "name": body.name,
+                "number": body.number
+            })
+        
+            person.save().then((person) => res.json(person))
         .catch((error) => next(error))
     })
 })
