@@ -32,4 +32,30 @@ Content-Type: application/json
 }
 
 ###
+
+PUT http://localhost:3001/api/persons/65b1aea21e3cc8f16b419eb0
+Content-Type: application/json
+
+{
+    "name": "Captain Hook",
+    "number": 321
+}
+
+###
+PUT http://localhost:3001/api/persons/65b1aea21e3cc8f16b419eb0
+Content-Type: application/json
+
+{
+    "name": "Captain Hook"
+}
+
+###
+PUT http://localhost:3001/api/persons/65b1aea21e3cc8f16b419eb0
+Content-Type: application/json
+
+{
+    "number": 321
+}
+
+###
 GET http://localhost:3001/api/persons

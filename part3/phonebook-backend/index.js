@@ -83,6 +83,22 @@ app.post("/api/persons", (req, res) => {
     })
 })
 
+app.put("/api/persons/:id", (req, res, next) => {
+    const body = req.body
+    console.log(body)
+    if(!body.name) return res.status(400).send("Missing name")
+    if(!body.number) return res.status(400).send("Missing number")
+
+    const updatedContact = {
+        name: body.name,
+        number: body.number
+    }
+
+    Person.findByIdAndUpdate(req.params.id, updatedContact, { new: true })
+    .then((updatedContact) => res.status(200).json(updatedContact))
+    .catch((error) => next(error))
+})
+
 app.get("/info", (req, res) => {
     const date = new Date()
     res.send(`
