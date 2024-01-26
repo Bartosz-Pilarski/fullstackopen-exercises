@@ -99,6 +99,12 @@ const ContactForm = ({persons, setPersons, newName, setNewName, newNumber, setNe
           setNotification({message: null, isError: false})
         }, 3000);
       })
+      .catch((error) => {
+        setNotification({message: `Contact doesn't meet validation criteria`, isError: true})
+        setTimeout(() => {
+          setNotification({message: null, isError: false})
+        }, 5000);
+      })
   }
 
   return (

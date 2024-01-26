@@ -60,7 +60,7 @@ app.delete("/api/persons/:id", (req, res, next) => {
         .catch((error) => next(error))
 })
 
-app.post("/api/persons", (req, res) => {
+app.post("/api/persons", (req, res, next) => {
     const body = req.body
     
     if(!body.name || !body.number) return res.status(400).json({
@@ -117,6 +117,7 @@ const errorHandler = (error, request, response, next) => {
     console.log(error.message)
 
     if(error.name === "CastError") return response.status(400).send("Bad id formatting")
+    if(error.name === "ValidationError") return response.status(400).send("Request doesn't fit validation criteria")
 
     next(error)
 }
