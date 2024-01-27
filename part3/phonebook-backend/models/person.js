@@ -4,35 +4,35 @@ const url = process.env.MONGO_URL
 
 mongoose.set("strictQuery", false)
 mongoose
-    .connect(url)
-    .then(() => console.log('Successfully connected to MongoDB'))
-    .catch((error) => console.log("Error while connecting to MongoDB: ", error.message))
+  .connect(url)
+  .then(() => console.log("Successfully connected to MongoDB"))
+  .catch((error) => console.log("Error while connecting to MongoDB: ", error.message))
 
 const personSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        minLength: 3,
-        required: true
-    },
-    number: {
-        type: String,
-        minLength: 8,
-        required: true,
-        validate: {
-            validator: (v) => {
-                const regex = new RegExp('-')
-                return regex.test(v)
-            }
-        }
-    },
+  name: {
+    type: String,
+    minLength: 3,
+    required: true
+  },
+  number: {
+    type: String,
+    minLength: 8,
+    required: true,
+    validate: {
+      validator: (v) => {
+        const regex = new RegExp("-")
+        return regex.test(v)
+      }
+    }
+  },
 })
 
-personSchema.set('toJSON', {
-    transform: (docIn, objOut) => {
-        objOut.id = objOut._id.toString()
-        delete objOut._id
-        delete objOut.__v
-    }
-  })
+personSchema.set("toJSON", {
+  transform: (docIn, objOut) => {
+    objOut.id = objOut._id.toString()
+    delete objOut._id
+    delete objOut.__v
+  }
+})
 
 module.exports = mongoose.model("Person", personSchema)
