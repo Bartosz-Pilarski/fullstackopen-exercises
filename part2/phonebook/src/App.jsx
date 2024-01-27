@@ -80,6 +80,15 @@ const ContactForm = ({persons, setPersons, newName, setNewName, newNumber, setNe
         }, 3000);
       })
       .catch(error => {
+        //Hacky way around it, should restructure backend validator later
+        const errorCode = error.message.substring(error.message.length-3)
+        if(errorCode === "400") {
+          setNotification({message: `Contact doesn't meet validation criteria`, isError: true})
+          setTimeout(() => {
+            setNotification({message: null, isError: false})
+          }, 5000);
+          return
+        }
         setPersons(persons.filter(person => person.id !== existingPerson.id))
 
         setNotification({message: `Contact ${existingPerson.name} was deleted from the server`, isError: true})
