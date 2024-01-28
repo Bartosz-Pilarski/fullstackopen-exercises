@@ -1,14 +1,16 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
+const config = require("./utils/config")
+const logger = require("./utils/logger")
 
 const blogRouter = require("./controllers/blogs")
 
 mongoose.set("strictQuery", false)
 mongoose
-    .connect(process.env.MONGO_URL)
-    .then(() => { console.log('Connected to Mongo')})
-    .catch((err) => console.log(err.message))
+    .connect(config.MONGO_URL)
+    .then(() => logger.info('Connected to Mongo'))
+    .catch((err) => logger.error(err.message))
 
 const app = express()
 

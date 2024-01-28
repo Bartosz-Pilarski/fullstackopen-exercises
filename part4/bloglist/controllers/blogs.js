@@ -1,5 +1,6 @@
 const blogRouter = require("express").Router()
 const Blog = require("../models/blog")
+const logger = require("../utils/logger")
 
 blogRouter.get("/", (req, res) => {
   Blog
@@ -7,7 +8,7 @@ blogRouter.get("/", (req, res) => {
     .then((result) => {
       res.status(200).json(result)
     })
-    .catch((err) => console.log(err))
+    .catch((err) => logger.error(err))
 })
 
 blogRouter.post("/", (req, res) => {
@@ -18,6 +19,7 @@ blogRouter.post("/", (req, res) => {
     .then(result => {
       response.status(201).json(result)
     })
+    .catch((err) => logger.error(err))
 })
 
 module.exports = blogRouter
