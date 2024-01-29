@@ -1,4 +1,5 @@
-const dummy = (blogs) => {
+//Doesn't take blogs as an argument anymore for linter reasons
+const dummy = () => {
   return 1
 }
 
