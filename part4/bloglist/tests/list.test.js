@@ -32,6 +32,22 @@ const blogs = [
     url: "https://google.com",
     likes: 2,
     __v: 1
+  },
+  {
+    _id: "6b422aa71b54a676234d17f8",
+    title: "I suppose not",
+    author: "Someone",
+    url: "https://google.de",
+    likes: 1,
+    __v: 2
+  },
+  {
+    _id: "6b422aa71b54a676234d17f8",
+    title: "And I don't see any issues so far",
+    author: "Someone",
+    url: "https://google.pl",
+    likes: 1,
+    __v: 1
   }
 ]
 
@@ -45,7 +61,7 @@ describe("Total likes", () => {
   })
 
   test("Of a bigger list is calculated correctly", () => {
-    expect(listHelper.totalLikes(blogs)).toBe(14)
+    expect(listHelper.totalLikes(blogs)).toBe(16)
   })
 })
 
@@ -60,5 +76,23 @@ describe("Favorite blog", () => {
 
   test("Of a bigger list to show the one with the highest likes value", () => {
     expect(listHelper.favoriteBlog(blogs)).toEqual(blogs[1])
+  })
+
+  describe("Most prolific blog author", () => {
+    test("In an empty list is an empty object", () => {
+      expect(listHelper.mostBlogs([])).toEqual({})
+    })
+
+    test("In a list of only one entry is the author of said entry with only one blog credited", () => {
+      expect(listHelper.mostBlogs([blogs[1]])).toEqual({ author: "Me", blogs: 1 })
+    })
+
+    test("In a list of multiple entries from the same author, is said author with the correct amount of blogs credited", () => {
+      expect(listHelper.mostBlogs([blogs[2], blogs[3]])).toEqual({ author: "Someone", blogs: 2 })
+    })
+
+    test("Is calculated and credited correctly in bigger, diverse, lists", () => {
+      expect(listHelper.mostBlogs(blogs)).toEqual({ author: "Someone", blogs: 3 })
+    })
   })
 })

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
-    "test": "jest --verbose"
+    "test": "jest --verbose=true"
   },
   "author": "Bartosz Pilarski",
   "license": "MIT",
