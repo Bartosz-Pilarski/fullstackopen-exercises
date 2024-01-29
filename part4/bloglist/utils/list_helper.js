@@ -1,3 +1,5 @@
+const lodash = require("lodash")
+
 //Doesn't take blogs as an argument anymore for linter reasons
 const dummy = () => {
   return 1
@@ -17,6 +19,7 @@ const favoriteBlog = (blogs) => {
   return max
 }
 
+//Without lodash
 const mostBlogs = (blogs) => {
   if(blogs.length === 0) return {}
 
@@ -39,11 +42,23 @@ const mostBlogs = (blogs) => {
   return topBlogger
 }
 
+//With lodash
+const mostLikes = (blogs) => {
+  if(blogs.length === 0) return {}
 
+  const authors = lodash.groupBy(blogs, "author")
+  const authorsByLikes = Object.values(authors).map((authorPosts) => { return {
+    author: authorPosts[0].author,
+    likes: authorPosts.reduce((sum, post) => sum+post.likes, 0)
+  }})
+
+  return lodash.maxBy(authorsByLikes, "likes")
+}
 
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
-  mostBlogs
+  mostBlogs,
+  mostLikes
 }
