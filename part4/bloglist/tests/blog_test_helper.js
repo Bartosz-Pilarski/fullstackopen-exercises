@@ -25,6 +25,8 @@ const initialBlogs = [
   },
 ]
 
+//For some reason, this function throws an error - client not connected
+//HOWEVER calling the same code within tests doesn't.
 const blogsInDb = async () => {
   const blogs = await Blog.find({})
 

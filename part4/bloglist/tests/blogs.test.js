@@ -32,6 +32,29 @@ describe("Getting blogs", () => {
   }, 100000)
 })
 
+describe("Posting blogs", () => {
+  test("Posted blogs are added to the database", async () => {
+    const newPost = {
+      title: "Writing unit tests",
+      author: "Ubert Theodore Est",
+      url: "https://utest.com",
+      likes: 1
+    }
+
+    const savedPost = await api
+      .post("/api/blogs")
+      .send(newPost)
+      .expect(201)
+      .expect("Content-Type", /application\/json/)
+
+    const blogsAfterPost = await Blog.find({})
+
+    expect(blogsAfterPost.length).toEqual(helper.initialBlogs.length+1)
+
+    expect(blogsAfterPost.map(blog => blog.toJSON())).toContainEqual(savedPost.body)
+  })
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
