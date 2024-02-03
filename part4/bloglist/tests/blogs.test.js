@@ -53,6 +53,22 @@ describe("Posting blogs", () => {
 
     expect(blogsAfterPost.map(blog => blog.toJSON())).toContainEqual(savedPost.body)
   })
+  test("Posted blogs without a likes value default to 0", async () => {
+    const newPost = {
+      title: "Guys please like my blog :(",
+      author: "Un Popular",
+      url: "https://agagsdgdsgxvxxxxx.pl"
+    }
+
+    const savedPost = await api
+      .post("/api/blogs")
+      .send(newPost)
+
+    const blogsInDb = await Blog.find({})
+
+    expect(savedPost.body.likes).toEqual(0)
+    expect(blogsInDb.map(blog => blog.toJSON())).toContainEqual(savedPost.body)
+  })
 })
 
 afterAll(async () => {
