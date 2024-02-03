@@ -9,6 +9,9 @@ blogRouter.get("/", async (req, res) => {
 blogRouter.post("/", async (req, res) => {
   const body = req.body
 
+  if(!body.title) res.status(400).json({ error: "No title provided" })
+  if(!body.url) res.status(400).json({ error: "No url provided" })
+
   const blog = new Blog({
     title: body.title,
     author: body.author,

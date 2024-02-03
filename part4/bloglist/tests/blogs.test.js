@@ -69,6 +69,30 @@ describe("Posting blogs", () => {
     expect(savedPost.body.likes).toEqual(0)
     expect(blogsInDb.map(blog => blog.toJSON())).toContainEqual(savedPost.body)
   })
+  test("Posting a blog with no title is refused with status 400", async () => {
+    const newPost = {
+      author: "Joshua Header",
+      url: "https://ihatetitles.com",
+      likes: 10
+    }
+
+    await api
+      .post("/api/blogs")
+      .send(newPost)
+      .expect(400)
+  })
+  test("Posting a blog with no url is refused with status 400", async () => {
+    const newPost = {
+      title: "This blog is in my notepad :D",
+      author: "George? *illegible*",
+      likes: 1
+    }
+
+    await api
+      .post("/api/blogs")
+      .send(newPost)
+      .expect(400)
+  })
 })
 
 afterAll(async () => {
