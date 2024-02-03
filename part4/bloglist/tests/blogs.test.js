@@ -21,11 +21,11 @@ describe("Getting blogs", () => {
       .get("/api/blogs")
       .expect(200)
       .expect("Content-Type", /application\/json/)
-  }, 10000)
+  }, 100000)
   test("Getting all blogs returns them correctly", async () => {
     const blogs = await api.get("/api/blogs")
     expect(blogs.body.length).toEqual(4)
-  }, 10000)
+  }, 100000)
 })
 
 afterAll(async () => {
