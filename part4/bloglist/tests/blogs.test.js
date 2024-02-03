@@ -26,6 +26,10 @@ describe("Getting blogs", () => {
     const blogs = await api.get("/api/blogs")
     expect(blogs.body.length).toEqual(4)
   }, 100000)
+  test("Blogs have an \"id\" property, instead of \"_id\"", async () => {
+    const blogs = await api.get("/api/blogs")
+    expect(blogs.body[0].id).toBeDefined()
+  }, 100000)
 })
 
 afterAll(async () => {
