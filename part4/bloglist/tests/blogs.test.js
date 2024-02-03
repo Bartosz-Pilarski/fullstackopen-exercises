@@ -13,7 +13,7 @@ beforeAll(async () => {
   const blogObjects = helper.initialBlogs.map((blog) => new Blog(blog))
 
   await Promise.all(blogObjects.map((blog) => blog.save()))
-})
+}, 100000)
 
 describe("Getting blogs", () => {
   test("Blogs are returned as json", async () => {
@@ -47,11 +47,11 @@ describe("Posting blogs", () => {
       .expect(201)
       .expect("Content-Type", /application\/json/)
 
-    const blogsAfterPost = await Blog.find({})
+    const blogsAfterPost = await helper.blogsInDb()
 
     expect(blogsAfterPost.length).toEqual(helper.initialBlogs.length+1)
 
-    expect(blogsAfterPost.map(blog => blog.toJSON())).toContainEqual(savedPost.body)
+    expect(blogsAfterPost).toContainEqual(savedPost.body)
   })
   test("Posted blogs without a likes value default to 0", async () => {
     const newPost = {
@@ -64,10 +64,10 @@ describe("Posting blogs", () => {
       .post("/api/blogs")
       .send(newPost)
 
-    const blogsInDb = await Blog.find({})
+    const blogsInDb = await helper.blogsInDb()
 
     expect(savedPost.body.likes).toEqual(0)
-    expect(blogsInDb.map(blog => blog.toJSON())).toContainEqual(savedPost.body)
+    expect(blogsInDb).toContainEqual(savedPost.body)
   })
   test("Posting a blog with no title is refused with status 400", async () => {
     const newPost = {
@@ -91,6 +91,72 @@ describe("Posting blogs", () => {
     await api
       .post("/api/blogs")
       .send(newPost)
+      .expect(400)
+  })
+})
+
+describe("Deleting blogs", () => {
+  test("Blogs can be correctly deleted", async () => {
+    const blogsInDb = await helper.blogsInDb()
+    const blogToDelete = blogsInDb[0]
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .expect(204)
+
+    const blogsAfterDeletion = await helper.blogsInDb()
+    expect(blogsAfterDeletion).not.toContainEqual(blogToDelete)
+  })
+})
+
+describe("Editing blogs", () => {
+  test("Blogs can be correctly edited", async () => {
+    const blogsInDb = await helper.blogsInDb()
+    const blogToEdit = blogsInDb[0]
+
+    const newBlog = {
+      title: "We need to keep changing",
+      author: "Jorg Evolution",
+      url: "https://iwillchangethesite.too",
+      likes: 52
+    }
+
+    const savedBlog = await api
+      .put(`/api/blogs/${blogToEdit.id}`)
+      .send(newBlog)
+      .expect(200)
+
+    const blogsAfterEdit = await helper.blogsInDb()
+    expect(blogsAfterEdit).toContainEqual(savedBlog.body)
+  })
+  test("Attempting to edit a blog without providing a title is refused with status 400", async () => {
+    const blogsInDb = await helper.blogsInDb()
+    const blogToEdit = blogsInDb[0]
+
+    const newBlog = {
+      author: "Hubert Ungry",
+      url: "https://sohungryiatethetitle.de",
+      likes: 10
+    }
+
+    await api
+      .put(`/api/blogs/${blogToEdit.id}`)
+      .send(newBlog)
+      .expect(400)
+  })
+  test("Attempting to edit a blog without providing an url is refused with status 400", async () => {
+    const blogsInDb = await helper.blogsInDb()
+    const blogToEdit = blogsInDb[0]
+
+    const newBlog = {
+      title: "Man I HATE browsers.",
+      author: "Bowser",
+      likes: 2
+    }
+
+    await api
+      .put(`/api/blogs/${blogToEdit.id}`)
+      .send(newBlog)
       .expect(400)
   })
 })
