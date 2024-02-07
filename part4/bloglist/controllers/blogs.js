@@ -49,10 +49,9 @@ blogRouter.delete("/:id", async (req, res) => {
   const blogToDelete = await Blog.findById(id)
   if(blogToDelete.user.toString() !== decodedToken.id) return res.status(401).json({ error: "User is not creator of the blog" })
 
-  const user = User.findById(decodedToken.id)
-  console.log(user.blogs)
-  let userBlogs = []
-  await user.blogs.map((blog) => {blog.id === id ? null : userBlogs.concat(blog)})
+  const user = await User.findById(decodedToken.id)
+  let userBlogs = user.blogs.filter((blog) => blog.toString() !== id)
+  user.blogs = userBlogs
 
   await Blog.findByIdAndDelete(id)
   await user.save()
