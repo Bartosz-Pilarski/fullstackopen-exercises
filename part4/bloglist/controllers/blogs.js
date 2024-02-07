@@ -1,6 +1,14 @@
+const jwt = require("jsonwebtoken")
+
 const blogRouter = require("express").Router()
 const Blog = require("../models/blog")
 const User = require("../models/user")
+
+const decodeTokenFrom = (req) => {
+  const header = req.get("Authorization")
+  if(header && header.startsWith("Bearer ")) return header.replace("Bearer ", "")
+  return null
+}
 
 blogRouter.get("/", async (req, res) => {
   const blogs = await Blog.find({}).populate("user", { username: 1, name: 1 })
@@ -8,31 +16,27 @@ blogRouter.get("/", async (req, res) => {
 })
 
 blogRouter.post("/", async (req, res) => {
-  const body = req.body
+  const decodedToken = await jwt.verify(decodeTokenFrom(req), process.env.SECRET)
+  if(!decodedToken.id) return res.status(401).json({ error: "Invalid token" })
 
+  const body = req.body
   if(!body.title) res.status(400).json({ error: "No title provided" })
   if(!body.url) res.status(400).json({ error: "No url provided" })
+
+  const user = await User.findById(decodedToken.id)
 
   const blog = new Blog({
     title: body.title,
     author: body.author,
     url: body.url,
     likes: Number(body.likes) || 0,
+    user: user.id
   })
-
-  // !- BEGIN TEMPORARY CODE -!
-
-  const users = await User.find({})
-  const user = users[0]
-
-  blog.user = user.id
+  const savedBlog = await blog.save()
 
   user.blogs = user.blogs.concat(user.blogs, blog)
   await user.save()
 
-  // !-  END TEMPORARY CODE  -!
-
-  const savedBlog = await blog.save()
   res.status(201).json(savedBlog)
 })
 
