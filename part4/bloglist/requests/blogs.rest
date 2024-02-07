@@ -3,10 +3,10 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY1YzNjZjJiNGYwZDVhZTg2MjQ0YmIxZCIsImlhdCI6MTcwNzMzNTU3MX0.rAjenaoBlj-69__k77itCborQIkYLIBixNj0nCd6xb0
 
 {
-  "title": "bazinga!",
-  "author": "bazinga!",
-  "url": "bazinga!",
-  "likes": 10
+  "title": "babloinga",
+  "author": "babloinga?",
+  "url": "babloinga!",
+  "likes": 12
 }
 
 ###
