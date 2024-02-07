@@ -27,8 +27,15 @@ usersRouter.post("/", async (req, res) => {
 })
 
 usersRouter.get("/", async (req, res) => {
-  const users = await User.find({}).populate("blogs")
+  const users = await User
+    .find({})
+    .populate("blogs", { title: 1, author: 1, likes: 1, url: 1 })
   res.status(200).json(users)
+})
+
+usersRouter.delete("/:id", async (req, res) => {
+  await User.findByIdAndDelete(req.params.id)
+  res.status(204).end()
 })
 
 module.exports = usersRouter

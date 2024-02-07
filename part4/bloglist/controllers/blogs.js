@@ -9,13 +9,20 @@ blogRouter.get("/", async (req, res) => {
   res.status(200).json(blogs)
 })
 
+blogRouter.get("/:id", async (req, res) => {
+  const blog = await Blog.findById(req.params.id)
+
+  if (blog) { res.json(blog) }
+  else { res.status(404).end() }
+})
+
 blogRouter.post("/", async (req, res) => {
   const decodedToken = await jwt.verify(req.token, process.env.SECRET)
-  if(!decodedToken.id) return res.status(401).json({ error: "Invalid token" })
-
   const body = req.body
-  if(!body.title) res.status(400).json({ error: "No title provided" })
-  if(!body.url) res.status(400).json({ error: "No url provided" })
+
+  if(!decodedToken.id) return res.status(401).json({ error: "Invalid token" })
+  if(!body.title) return res.status(400).json({ error: "No title provided" })
+  if(!body.url) return res.status(400).json({ error: "No url provided" })
 
   const user = await User.findById(decodedToken.id)
 
@@ -26,18 +33,30 @@ blogRouter.post("/", async (req, res) => {
     likes: Number(body.likes) || 0,
     user: user.id
   })
-  const savedBlog = await blog.save()
 
-  user.blogs = user.blogs.concat(user.blogs, blog)
+  user.blogs = user.blogs.concat(blog)
   await user.save()
 
+  const savedBlog = await blog.save()
   res.status(201).json(savedBlog)
 })
 
 blogRouter.delete("/:id", async (req, res) => {
   const id = req.params.id
+  const decodedToken = await jwt.verify(req.token, process.env.SECRET)
+  if(!decodedToken.id) return res.status(401).json({ error: "Invalid token" })
 
-  await Blog.findOneAndDelete(id)
+  const blogToDelete = await Blog.findById(id)
+  if(blogToDelete.user.toString() !== decodedToken.id) return res.status(401).json({ error: "User is not creator of the blog" })
+
+  const user = User.findById(decodedToken.id)
+  console.log(user.blogs)
+  let userBlogs = []
+  await user.blogs.map((blog) => {blog.id === id ? null : userBlogs.concat(blog)})
+
+  await Blog.findByIdAndDelete(id)
+  await user.save()
+
   res.status(204).end()
 })
 

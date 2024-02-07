@@ -24,15 +24,17 @@ const userSchema = new mongoose.Schema({
   ]
 })
 
-mongoose.plugin(mongooseUniqueValidator)
+userSchema.plugin(mongooseUniqueValidator)
 
 userSchema.set("toJSON", {
-  transform: (doc, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString()
-    delete returnedObject._id
-    delete returnedObject.__v
-    delete returnedObject.passwordHash
+  transform: (doc, returnedObj) => {
+    returnedObj.id = returnedObj._id.toString()
+    delete returnedObj._id
+    delete returnedObj.__v
+    delete returnedObj.passwordHash
   }
 })
 
-module.exports = mongoose.model("User", userSchema)
+const User = mongoose.model("User", userSchema)
+
+module.exports = User
