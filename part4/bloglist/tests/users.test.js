@@ -82,6 +82,81 @@ describe("Creating users", () => {
   })
 })
 
+describe("Logging in", () => {
+  test("Logging in as a previously created user is possible", async () => {
+    const loginInfo = {
+      username: "root",
+      password: "NoneOYerBusiness"
+    }
+
+    await api
+      .post("/api/login")
+      .send(loginInfo)
+      .expect(200)
+      .expect("Content-Type", /application\/json/)
+  })
+
+  describe("It's impossible to log in while missing:",  () => {
+    test("The username", async () => {
+      const loginInfo = {
+        password: "NoneOYerBusiness"
+      }
+
+      await api
+        .post("/api/login")
+        .send(loginInfo)
+        .expect(400)
+    })
+
+    test("The password", async () => {
+      const loginInfo = {
+        username: "root"
+      }
+
+      await api
+        .post("/api/login")
+        .send(loginInfo)
+        .expect(400)
+    })
+  })
+
+  describe("The request returns 401 - Unathorized with the wrong credentials", () => {
+    test("Wrong password", async () => {
+      const loginInfo = {
+        username: "root",
+        password: "yahaharr"
+      }
+
+      await api
+        .post("/api/login")
+        .send(loginInfo)
+        .expect(401)
+    })
+    test("Wrong username", async () => {
+      const loginInfo = {
+        username: "rewt",
+        password: "NoneOYerBusiness"
+      }
+
+      await api
+        .post("/api/login")
+        .send(loginInfo)
+        .expect(401)
+    })
+    test("Both username and password", async () => {
+      const loginInfo = {
+        username: "rewt",
+        password: "yaharr"
+      }
+
+      await api
+        .post("/api/login")
+        .send(loginInfo)
+        .expect(401)
+    })
+  })
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })

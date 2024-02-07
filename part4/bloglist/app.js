@@ -9,6 +9,7 @@ const errorHandler = require("./utils/error_handler")
 
 const blogRouter = require("./controllers/blogs")
 const usersRouter = require("./controllers/users")
+const loginRouter = require("./controllers/login")
 
 mongoose.set("strictQuery", false)
 mongoose
@@ -23,6 +24,7 @@ app.use(express.json())
 
 app.use("/api/blogs", blogRouter)
 app.use("/api/users", usersRouter)
+app.use("/api/login", loginRouter)
 
 app.use(errorHandler)
 
