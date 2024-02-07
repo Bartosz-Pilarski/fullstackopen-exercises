@@ -74,6 +74,11 @@ describe("Creating users", () => {
         .send(newUser)
         .expect(400)
     })
+
+    test("No invalid users were added to the database", async () => {
+      const usersInDb = await helper.usersInDb()
+      expect(usersInDb.length).toEqual(1)
+    })
   })
 })
 
