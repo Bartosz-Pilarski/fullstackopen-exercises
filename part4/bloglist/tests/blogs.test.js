@@ -3,13 +3,37 @@ const supertest = require("supertest")
 
 const app = require("../app")
 const Blog = require("../models/blog")
+const User = require("../models/user")
 const helper = require("./blog_test_helper")
 
 const api = supertest(app)
 
-beforeAll(async () => {
-  await Blog.deleteMany({})
+let token = ""
+let blogToDelete = undefined
 
+beforeAll(async () => {
+  await User.deleteMany({})
+
+  const testUser = {
+    username: "tester",
+    name: "blogTester",
+    password: "yeah"
+  }
+  await api
+    .post("/api/users")
+    .send(testUser)
+
+  const credentials = {
+    username: "tester",
+    password: "yeah"
+  }
+  const login = await api
+    .post("/api/login")
+    .send(credentials)
+
+  token = login.body.token
+
+  await Blog.deleteMany({})
   const blogObjects = helper.initialBlogs.map((blog) => new Blog(blog))
 
   await Promise.all(blogObjects.map((blog) => blog.save()))
@@ -43,6 +67,7 @@ describe("Posting blogs", () => {
 
     const savedPost = await api
       .post("/api/blogs")
+      .set("Authorization", `Bearer ${token}`)
       .send(newPost)
       .expect(201)
       .expect("Content-Type", /application\/json/)
@@ -50,8 +75,9 @@ describe("Posting blogs", () => {
     const blogsAfterPost = await helper.blogsInDb()
 
     expect(blogsAfterPost.length).toEqual(helper.initialBlogs.length+1)
-
     expect(blogsAfterPost).toContainEqual(savedPost.body)
+
+    blogToDelete = savedPost.body
   })
   test("Posted blogs without a likes value default to 0", async () => {
     const newPost = {
@@ -62,7 +88,10 @@ describe("Posting blogs", () => {
 
     const savedPost = await api
       .post("/api/blogs")
+      .set("Authorization", `Bearer ${token}`)
       .send(newPost)
+      .expect(201)
+      .expect("Content-Type", /application\/json/)
 
     const blogsInDb = await helper.blogsInDb()
 
@@ -78,6 +107,7 @@ describe("Posting blogs", () => {
 
     await api
       .post("/api/blogs")
+      .set("Authorization", `Bearer ${token}`)
       .send(newPost)
       .expect(400)
   })
@@ -90,6 +120,7 @@ describe("Posting blogs", () => {
 
     await api
       .post("/api/blogs")
+      .set("Authorization", `Bearer ${token}`)
       .send(newPost)
       .expect(400)
   })
@@ -97,17 +128,21 @@ describe("Posting blogs", () => {
 
 describe("Deleting blogs", () => {
   test("Blogs can be correctly deleted", async () => {
-    const blogsInDb = await helper.blogsInDb()
-    const blogToDelete = blogsInDb[0]
-
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .set("Authorization", `Bearer ${token}`)
       .expect(204)
 
     const blogsAfterDeletion = await helper.blogsInDb()
     expect(blogsAfterDeletion).not.toContainEqual(blogToDelete)
   })
 })
+
+/*
+!- OUTDATED ROUTE HANDLING                         -!
+!- EDITING BLOGS DOES NOT USE TOKEN AUTHENTICATION -!
+!- TESTS CURRENTLY IRRELEVANT                      -!
+*/
 
 describe("Editing blogs", () => {
   test("Blogs can be correctly edited", async () => {
