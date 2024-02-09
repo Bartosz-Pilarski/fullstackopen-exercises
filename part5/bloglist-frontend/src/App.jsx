@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react'
-import Bloglist from './components/Bloglist'
-import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
+
+import Bloglist from './components/Bloglist'
+
+import LoginForm from './components/LoginForm'
+import BlogForm from './components/BlogForm'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -32,6 +35,7 @@ const App = () => {
       <div>
         <h1> Hello, {user.name} </h1>
         <button onClick={() => handleLogout()}>log out</button>
+        <BlogForm blogs={blogs} setBlogs={setBlogs}/>
         <Bloglist blogs={blogs} />
       </div>
     )
