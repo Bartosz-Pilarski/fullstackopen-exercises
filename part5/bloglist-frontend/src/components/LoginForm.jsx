@@ -2,7 +2,7 @@ import { useState } from "react"
 import loginService from "../services/login"
 import blogsService from "../services/blogs"
 
-const LoginForm = ({ setUser }) => {
+const LoginForm = ({ setUser, setNotification }) => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const handleLogin = async (event) => {
@@ -16,8 +16,10 @@ const LoginForm = ({ setUser }) => {
       setUsername("")
       setPassword("")
     } catch(err) {
-      //handle this better later
-      console.log("invalid credentials")
+      setNotification({content: `Invalid credentials`, isError: true})
+      setTimeout(() => {
+        setNotification({content: null, isError: false})
+      }, 3000);
     }
   }
   return(

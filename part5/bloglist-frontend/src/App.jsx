@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import blogService from './services/blogs'
 
 import Bloglist from './components/Bloglist'
+import Notification from './components/Notification'
 
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
@@ -9,6 +10,10 @@ import BlogForm from './components/BlogForm'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
+  const [notification, setNotification] = useState({
+    content: null,
+    isError: false
+  })
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -33,18 +38,28 @@ const App = () => {
   const userLoggedIn = () => {
     return(
       <div>
+        <Notification notification={notification}/>
         <h1> Hello, {user.name} </h1>
         <button onClick={() => handleLogout()}>log out</button>
-        <BlogForm blogs={blogs} setBlogs={setBlogs}/>
+        <BlogForm blogs={blogs} setBlogs={setBlogs} setNotification={setNotification}/>
         <Bloglist blogs={blogs} />
       </div>
     )
   }
 
+  const userNotLoggedIn = () => {
+    return(
+      <div>
+        <Notification notification={notification}/>
+        <br/>
+        <LoginForm setUser={setUser} setNotification={setNotification}/>
+      </div>
+    )
+  }
   return (
     <div>
       {user === null 
-      ? <LoginForm setUser={setUser}/>
+      ? userNotLoggedIn()
       : userLoggedIn()}
     </div>
   )
