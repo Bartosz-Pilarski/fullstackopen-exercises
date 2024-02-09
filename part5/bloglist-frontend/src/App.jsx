@@ -12,12 +12,36 @@ const App = () => {
       setBlogs( blogs )
     )  
   }, [])
+  
+  useEffect(() => {
+    const storedUserJSON = window.localStorage.getItem("bloglistUser")
+    if(storedUserJSON) {
+      const user = JSON.parse(storedUserJSON)
+      setUser(user)
+      blogService.setToken(user.token)
+    }
+  }, [])
+
+  const handleLogout = () => {
+    window.localStorage.removeItem("bloglistUser")
+    setUser(null)
+  }
+
+  const userLoggedIn = () => {
+    return(
+      <div>
+        <h1> Hello, {user.name} </h1>
+        <button onClick={() => handleLogout()}>log out</button>
+        <Bloglist blogs={blogs} />
+      </div>
+    )
+  }
 
   return (
     <div>
       {user === null 
       ? <LoginForm setUser={setUser}/>
-      : <Bloglist blogs={blogs} />}
+      : userLoggedIn()}
     </div>
   )
 }
