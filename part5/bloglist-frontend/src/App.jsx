@@ -3,6 +3,7 @@ import blogService from './services/blogs'
 
 import Bloglist from './components/Bloglist'
 import Notification from './components/Notification'
+import ToggleVisibility from './components/ToggleVisibility'
 
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
@@ -41,7 +42,12 @@ const App = () => {
         <Notification notification={notification}/>
         <h1> Hello, {user.name} </h1>
         <button onClick={() => handleLogout()}>log out</button>
-        <BlogForm blogs={blogs} setBlogs={setBlogs} setNotification={setNotification}/>
+        <ToggleVisibility buttonLabels={{
+          open: "Create new blog",
+          close: "Cancel"
+        }}> 
+          <BlogForm blogs={blogs} setBlogs={setBlogs} setNotification={setNotification}/>
+        </ToggleVisibility>
         <Bloglist blogs={blogs} />
       </div>
     )
