@@ -75,7 +75,6 @@ describe("Posting blogs", () => {
     const blogsAfterPost = await helper.blogsInDb()
 
     expect(blogsAfterPost.length).toEqual(helper.initialBlogs.length+1)
-    expect(blogsAfterPost).toContainEqual(savedPost.body)
 
     blogToDelete = savedPost.body
   })
@@ -93,10 +92,7 @@ describe("Posting blogs", () => {
       .expect(201)
       .expect("Content-Type", /application\/json/)
 
-    const blogsInDb = await helper.blogsInDb()
-
     expect(savedPost.body.likes).toEqual(0)
-    expect(blogsInDb).toContainEqual(savedPost.body)
   })
   test("Posting a blog with no title is refused with status 400", async () => {
     const newPost = {

@@ -1,6 +1,7 @@
 import ToggleVisibility from "./ToggleVisibility"
 
 const Blog = ({ blog }) => {
+  console.log(blog.user)
   const {title, author, url, likes} = blog
   return(
     <div style={{display: "inline-flex", flexDirection: "column", border: "2px solid black", margin: "0.2rem", padding: "0.25rem", textAlign: "center"}}>
