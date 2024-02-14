@@ -16,29 +16,29 @@ const LoginForm = ({ setUser, setNotification }) => {
       setUsername("")
       setPassword("")
     } catch(err) {
-      setNotification({content: `Invalid credentials`, isError: true})
+      setNotification({ content: "Invalid credentials", isError: true })
       setTimeout(() => {
-        setNotification({content: null, isError: false})
-      }, 3000);
+        setNotification({ content: null, isError: false })
+      }, 3000)
     }
   }
   return(
     <form onSubmit={handleLogin}>
       <div>
         username
-        <input 
+        <input
           type="text"
           value={username}
-          onChange={({ target }) => setUsername(target.value)} 
+          onChange={({ target }) => setUsername(target.value)}
           name="username"
         />
       </div>
       <div>
         password
-        <input 
+        <input
           type="password"
           value={password}
-          onChange={({ target }) => setPassword(target.value)} 
+          onChange={({ target }) => setPassword(target.value)}
           name="password"
         />
       </div>

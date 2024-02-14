@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react'
-import blogService from './services/blogs'
+import { useState, useEffect } from "react"
+import blogService from "./services/blogs"
 
-import Bloglist from './components/Bloglist'
-import Notification from './components/Notification'
-import ToggleVisibility from './components/ToggleVisibility'
+import Bloglist from "./components/Bloglist"
+import Notification from "./components/Notification"
+import ToggleVisibility from "./components/ToggleVisibility"
 
-import LoginForm from './components/LoginForm'
-import BlogForm from './components/BlogForm'
-import { useRef } from 'react'
+import LoginForm from "./components/LoginForm"
+import BlogForm from "./components/BlogForm"
+import { useRef } from "react"
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -34,7 +34,7 @@ const App = () => {
     }
     fetchAndSortBlogs()
   }, [])
-  
+
   //Set up user if logged in
   useEffect(() => {
     const storedUserJSON = window.localStorage.getItem("bloglistUser")
@@ -44,13 +44,13 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
-  
+
   /*
     ------------------
         FUNCTIONS
     ------------------
   */
-  
+
   // Save blog to database, toggle visibility of form.
   const addBlog = async (newBlog) => {
     blogFormRef.current.handleToggleVisibility()
@@ -58,16 +58,16 @@ const App = () => {
       const savedBlog = await blogService.create(newBlog)
 
       setBlogs(blogs.concat(savedBlog))
-      setNotification({content: `Blog ${savedBlog.title} created succesfully`, isError: false})
+      setNotification({ content: `Blog ${savedBlog.title} created succesfully`, isError: false })
 
       setTimeout(() => {
-        setNotification({content: null, isError: false})
-      }, 3000);
+        setNotification({ content: null, isError: false })
+      }, 3000)
     } catch(err) {
-      setNotification({content: `Error while creating blog`, isError: true})
+      setNotification({ content: "Error while creating blog", isError: true })
       setTimeout(() => {
-        setNotification({content: null, isError: false})
-      }, 3000);
+        setNotification({ content: null, isError: false })
+      }, 3000)
     }
   }
 
@@ -92,13 +92,13 @@ const App = () => {
         <Notification notification={notification}/>
         <h1> Hello, {user.name} </h1>
         <button onClick={() => handleLogout()}>log out</button>
-        <ToggleVisibility 
-        buttonLabels={{
-          open: "Create new blog",
-          close: "Cancel"
-        }}
-        ref={blogFormRef}
-        > 
+        <ToggleVisibility
+          buttonLabels={{
+            open: "Create new blog",
+            close: "Cancel"
+          }}
+          ref={blogFormRef}
+        >
           <BlogForm addBlog={addBlog}/>
         </ToggleVisibility>
         <Bloglist blogs={blogs} handleDeletion={deleteBlog}/>
@@ -119,9 +119,9 @@ const App = () => {
 
   return (
     <div>
-      {user === null 
-      ? userNotLoggedIn()
-      : userLoggedIn()}
+      {user === null
+        ? userNotLoggedIn()
+        : userLoggedIn()}
     </div>
   )
 }

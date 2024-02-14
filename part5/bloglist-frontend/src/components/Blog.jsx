@@ -3,7 +3,7 @@ import blogsService from "../services/blogs"
 import { useState } from "react"
 
 const Blog = ({ blog, handleDeletion }) => {
-  const {title, author, url, likes, id} = blog
+  const { title, author, url, likes, id } = blog
   const [blogLikes, setBlogLikes] = useState(likes)
 
   const handleLiking = async (blogId) => {
@@ -12,7 +12,7 @@ const Blog = ({ blog, handleDeletion }) => {
   }
 
   return(
-    <div style={{display: "inline-flex", flexDirection: "column", border: "2px solid black", margin: "0.2rem", padding: "0.25rem", textAlign: "center"}}>
+    <div style={{ display: "inline-flex", flexDirection: "column", border: "2px solid black", margin: "0.2rem", padding: "0.25rem", textAlign: "center" }}>
       <p>{title}</p>
       <ToggleVisibility
         buttonLabels={{
@@ -20,16 +20,16 @@ const Blog = ({ blog, handleDeletion }) => {
           close: "Hide details"
         }}
       >
-      <p>{author}</p>
-      <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly"}}>
-        <span>{blogLikes}</span>
-        <button onClick={() => handleLiking(id)}>like</button>
-      </div>
-      <p>{url}</p>
-      <p>{blog.user.username}</p>
-      <button onClick={() => handleDeletion(id)}>Delete</button>
+        <p>{author}</p>
+        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly" }}>
+          <span>{blogLikes}</span>
+          <button onClick={() => handleLiking(id)}>like</button>
+        </div>
+        <p>{url}</p>
+        <p>{blog.user.username}</p>
+        <button onClick={() => handleDeletion(id)}>Delete</button>
       </ToggleVisibility>
-    </div>  
+    </div>
   )
 }
 

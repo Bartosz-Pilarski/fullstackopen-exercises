@@ -1,6 +1,7 @@
 import { useImperativeHandle } from "react"
 import { forwardRef } from "react"
 import { useState } from "react"
+import PropTypes from "prop-types"
 
 const ToggleVisibility = forwardRef((props, refs) => {
   const buttonLabels = {
@@ -33,5 +34,14 @@ const ToggleVisibility = forwardRef((props, refs) => {
     </div>
   )
 })
+
+ToggleVisibility.displayName = "ToggleVisibility"
+
+ToggleVisibility.propTypes = {
+  buttonLabels: PropTypes.shape({
+    open: PropTypes.string,
+    close: PropTypes.string
+  })
+}
 
 export default ToggleVisibility

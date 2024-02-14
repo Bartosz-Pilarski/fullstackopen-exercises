@@ -1,6 +1,6 @@
-const Notification = ({notification}) => {
+const Notification = ({ notification }) => {
   const { content, isError } = notification
-  if(!content) return null 
+  if(!content) return null
 
   const notificationStyle = {
     display: "inline",
@@ -21,7 +21,7 @@ const Notification = ({notification}) => {
     padding: "0.5rem",
     border: "0.25rem solid red"
   }
-  
+
   return(
     <div style={isError ? errorStyle : notificationStyle}>
       {content}

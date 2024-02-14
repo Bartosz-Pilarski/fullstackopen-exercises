@@ -1,4 +1,4 @@
-import Blog from './Blog'
+import Blog from "./Blog"
 
 const Bloglist = ({ blogs, handleDeletion }) => {
   return(

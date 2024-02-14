@@ -8,12 +8,12 @@ const BlogForm = ({ addBlog }) => {
   const handleBlogCreation = async (event) => {
     event.preventDefault()
     const newBlog = {
-        title,
-        author,
-        url
-      }
+      title,
+      author,
+      url
+    }
     addBlog(newBlog)
-    
+
     setTitle("")
     setAuthor("")
     setUrl("")
@@ -25,29 +25,29 @@ const BlogForm = ({ addBlog }) => {
       <form onSubmit={handleBlogCreation}>
         <div>
           title
-          <input 
-            type="text" 
-            name="title" 
+          <input
+            type="text"
+            name="title"
             value={title}
-            onChange={({ target }) => setTitle(target.value)}  
+            onChange={({ target }) => setTitle(target.value)}
           />
         </div>
         <div>
         author
-          <input 
-            type="text" 
-            name="author" 
+          <input
+            type="text"
+            name="author"
             value={author}
-            onChange={({ target }) => setAuthor(target.value)}  
+            onChange={({ target }) => setAuthor(target.value)}
           />
         </div>
         <div>
         url
-          <input 
-            type="text" 
-            name="url" 
+          <input
+            type="text"
+            name="url"
             value={url}
-            onChange={({ target }) => setUrl(target.value)}  
+            onChange={({ target }) => setUrl(target.value)}
           />
         </div>
         <button type="submit">
