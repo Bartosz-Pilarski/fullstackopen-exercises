@@ -17,8 +17,8 @@ const Blog = ({ blog }) => {
         <span>{likes}</span>
         <button >like</button>
       </div>
-
       <p>{url}</p>
+      <p>{blog.user.username}</p>
       </ToggleVisibility>
     </div>  
   )
