@@ -27,9 +27,12 @@ const App = () => {
 
   //Get initial blogs
   useEffect(() => {
-    blogService.getAll().then(blogs =>
+    const fetchAndSortBlogs = async () => {
+      const blogsUnsorted = await blogService.getAll()
+      const blogs = blogsUnsorted.toSorted((a, b) => b.likes - a.likes)
       setBlogs( blogs )
-    )  
+    }
+    fetchAndSortBlogs()
   }, [])
   
   //Set up user if logged in
