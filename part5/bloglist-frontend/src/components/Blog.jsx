@@ -2,7 +2,7 @@ import ToggleVisibility from "./ToggleVisibility"
 import blogsService from "../services/blogs"
 import { useState } from "react"
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, handleDeletion }) => {
   const {title, author, url, likes, id} = blog
   const [blogLikes, setBlogLikes] = useState(likes)
 
@@ -27,6 +27,7 @@ const Blog = ({ blog }) => {
       </div>
       <p>{url}</p>
       <p>{blog.user.username}</p>
+      <button onClick={() => handleDeletion(id)}>Delete</button>
       </ToggleVisibility>
     </div>  
   )

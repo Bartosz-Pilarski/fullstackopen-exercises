@@ -71,6 +71,14 @@ const App = () => {
     }
   }
 
+  const deleteBlog = async (blogId) => {
+    if(window.confirm("Do you really want to delete this blog?")) {
+      await blogService.deleteBlog(blogId)
+      const blogsAfterDeletion = blogs.filter((blog) => blog.id !== blogId)
+      setBlogs(blogsAfterDeletion)
+    }
+  }
+
   // Log user out, delete localStorage of user.
   const handleLogout = () => {
     window.localStorage.removeItem("bloglistUser")
@@ -93,7 +101,7 @@ const App = () => {
         > 
           <BlogForm addBlog={addBlog}/>
         </ToggleVisibility>
-        <Bloglist blogs={blogs} />
+        <Bloglist blogs={blogs} handleDeletion={deleteBlog}/>
       </div>
     )
   }
