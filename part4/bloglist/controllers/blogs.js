@@ -57,21 +57,19 @@ blogRouter.delete("/:id", async (req, res) => {
 
 blogRouter.put("/:id", async (req, res) => {
   const id = req.params.id
-  const { title, author, url, likes } = req.body
-
-  if(!title) res.status(400).json({ error: "No title provided" })
-  if(!url) res.status(400).json({ error: "No url provided" })
-
-  const editedBlog = await Blog.findByIdAndUpdate(
-    id,
-    {
-      title: title,
-      author: author,
-      url: url,
-      likes: Number(likes) || 0
-    },
-    { new: true, runValidators: true, context: "query" })
+  const currentState = await Blog.findById(id)
+  console.log(currentState.likes+1)
+  const updatedLikes = currentState.likes+1
+  const editedBlog = await Blog.findByIdAndUpdate(id, {
+    ...currentState._doc,
+    likes: updatedLikes
+  }, { new: true, runValidators: true, context: "query" })
+  console.log({
+    ...currentState._doc,
+    likes: updatedLikes
+  })
   res.status(200).json(editedBlog)
 })
+
 
 module.exports = blogRouter
