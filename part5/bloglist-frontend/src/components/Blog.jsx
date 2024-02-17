@@ -1,5 +1,5 @@
 import ToggleVisibility from "./ToggleVisibility"
-import blogsService from "../services/blogs"
+import blogService from "../services/blogs"
 import { useState } from "react"
 
 const Blog = ({ blog, handleDeletion }) => {
@@ -7,7 +7,7 @@ const Blog = ({ blog, handleDeletion }) => {
   const [blogLikes, setBlogLikes] = useState(likes)
 
   const handleLiking = async (blogId) => {
-    const likedBlog = await blogsService.like(blogId)
+    const likedBlog = await blogService.like(blogId)
     setBlogLikes(likedBlog.likes)
   }
 

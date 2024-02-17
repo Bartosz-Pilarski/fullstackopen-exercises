@@ -4,6 +4,9 @@ import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import Blog from "./Blog"
 
+// //Required because the handler for liking is internal
+// import blogService from "../services/blogs"
+
 describe("Only the blog title is displayed initially", () => {
   let container
 
@@ -38,4 +41,16 @@ describe("Only the blog title is displayed initially", () => {
     const extraInfoParent = screen.queryByText(blog.url).closest("div")
     expect(extraInfoParent).not.toHaveStyle("display: none")
   })
+
+  // test("If the like button is called twice, the event handler also is", () => {
+  //   const spyLikeBlog = jest.spyOn(blogService, "like")
+  //   const user = userEvent.setup()
+  //   const likeButton = screen.getByText("like")
+  //   console.log(likeButton)
+
+  //   user.click(likeButton)
+  //   user.click(likeButton)
+
+  //   expect(spyLikeBlog).toBeCalledTimes(2)
+  // })
 })
