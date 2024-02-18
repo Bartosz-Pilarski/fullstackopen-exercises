@@ -134,6 +134,11 @@ describe("Blog app", function() {
 
         cy.get("@likeContainer")
           .contains("1")
+
+        //Persists after reload
+        cy.visit("")
+          .get("@likeContainer")
+          .contains("1")
       })
     })
   })
