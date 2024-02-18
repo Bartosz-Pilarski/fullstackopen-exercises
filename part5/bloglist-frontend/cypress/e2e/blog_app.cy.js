@@ -69,78 +69,80 @@ describe("Blog app", function() {
       cy.contains("log out")
       cy.contains("Create new blog")
     })
+  })
 
-    describe("When logged in", function() {
-      beforeEach(function() {
-        cy.login({
-          username: "JohnFH",
-          password: "thisgamesucks"
-        })
-      })
-      it("...user can create a new blog", function() {
-        cy.contains("Create new blog")
-          .click()
-
-        cy.get("input[placeholder=\"Name the blog\"]")
-          .type("For Honor sucks")
-
-        cy.get("input[placeholder=\"Name the author\"")
-          .type("Jonathan ForHonor")
-
-        cy.get("input[placeholder=\"blogurl.com\"")
-          .type("https://itruinedmylife.com")
-
-        cy.get("form")
-          .contains("button[type=\"submit\"]", "Create")
-          .click()
-
-        cy.contains("Blog For Honor sucks created succesfully")
-        cy.contains("For Honor sucks")
+  describe("When logged in", function() {
+    beforeEach(function() {
+      cy.login({
+        username: "JohnFH",
+        password: "thisgamesucks"
       })
     })
+    it("...user can create a new blog", function() {
+      cy.contains("Create new blog")
+        .click()
 
-    describe("With a blog already created", function() {
-      beforeEach(function() {
-        cy.login({
-          username: "JohnFH",
-          password: "thisgamesucks"
-        })
+      cy.get("input[placeholder=\"Name the blog\"]")
+        .type("For Honor sucks")
 
-        cy.addBlog({
-          title: "For Honor isn't that bad",
-          author: "Jonathan ForHonor",
-          url: "https://butidontrecommendit.com"
-        })
+      cy.get("input[placeholder=\"Name the author\"")
+        .type("Jonathan ForHonor")
 
-        cy.visit("")
+      cy.get("input[placeholder=\"blogurl.com\"")
+        .type("https://itruinedmylife.com")
+
+      cy.get("form")
+        .contains("button[type=\"submit\"]", "Create")
+        .click()
+
+      cy.contains("Blog For Honor sucks created succesfully")
+      cy.contains("For Honor sucks")
+    })
+  })
+
+  describe("With a blog already created", function() {
+    beforeEach(function() {
+      cy.login({
+        username: "JohnFH",
+        password: "thisgamesucks"
       })
 
-      it("...a blog can be liked", function() {
-        cy.contains("For Honor isn't that bad")
-          .parent()
-          .as("blogPost")
-          .contains("View details")
-          .click()
-
-        cy.get("@blogPost")
-          .contains("like")
-          .parent()
-          .as("likeContainer")
-          .contains("0")
-
-        cy.get("@blogPost")
-          .contains("like")
-          .click()
-
-        cy.get("@likeContainer")
-          .contains("1")
-
-        //Persists after reload
-        cy.visit("")
-          .get("@likeContainer")
-          .contains("1")
+      cy.addBlog({
+        title: "For Honor isn't that bad",
+        author: "Jonathan ForHonor",
+        url: "https://butidontrecommendit.com"
       })
 
+      cy.visit("")
+    })
+
+    it("...a blog can be liked", function() {
+      cy.contains("For Honor isn't that bad")
+        .parent()
+        .as("blogPost")
+        .contains("View details")
+        .click()
+
+      cy.get("@blogPost")
+        .contains("like")
+        .parent()
+        .as("likeContainer")
+        .contains("0")
+
+      cy.get("@blogPost")
+        .contains("like")
+        .click()
+
+      cy.get("@likeContainer")
+        .contains("1")
+
+      //Persists after reload
+      cy.visit("")
+        .get("@likeContainer")
+        .contains("1")
+    })
+
+    describe("Deleting blogs", function() {
       it("...the author can delete their own blog post", function() {
         cy.contains("For Honor isn't that bad")
           .parent()
@@ -156,7 +158,7 @@ describe("Blog app", function() {
           .should("not.exist")
       })
 
-      it.only("...the user can't delete a blog they didn't post", function() {
+      it("...the user can't delete a blog they didn't post", function() {
         const newUser = {
           username: "MarioMH",
           name: "Mario Mordhau",
@@ -178,6 +180,82 @@ describe("Blog app", function() {
           .contains("Delete")
           .should("not.exist")
       })
+    })
+  })
+
+  describe("With multiple blogs created", function() {
+    beforeEach(function() {
+      cy.login({
+        username: "JohnFH",
+        password: "thisgamesucks"
+      })
+
+      cy.addBlog({
+        title: "For Honor isn't that bad",
+        author: "Jonathan ForHonor",
+        url: "https://butidontrecommendit.com"
+      })
+      cy.addBlog({
+        title: "For Honor could be better",
+        author: "Jonathan ForHonor",
+        url: "https://butidontrecommendit.com"
+      })
+      cy.addBlog({
+        title: "For Honor is alright",
+        author: "Jonathan ForHonor",
+        url: "https://butidontrecommendit.com"
+      })
+
+      cy.visit("")
+    })
+
+    it.only("Blogs are sorted according to like count", function() {
+      cy.get(".blogpost")
+        .eq(2)
+        .as("topPost")
+        .contains("View details")
+        .click()
+      cy.get("@topPost")
+        .contains("like")
+        .parent()
+        .as("topLikeContainer")
+
+      cy.get(".blogpost")
+        .eq(0)
+        .as("midPost")
+        .contains("View details")
+        .click()
+      cy.get("@midPost")
+        .contains("like")
+        .parent()
+        .as("midLikeContainer")
+
+      //Bit of repetition but should be alright
+      cy.get("@topLikeContainer")
+        .contains("like")
+        .click()
+      cy.get("@topLikeContainer")
+        .contains("1")
+      cy.get("@topLikeContainer")
+        .contains("like")
+        .click()
+      cy.get("@topLikeContainer")
+        .contains("2")
+
+      cy.get("@midLikeContainer")
+        .contains("like")
+        .click()
+      cy.get("@midLikeContainer")
+        .contains("1")
+
+      cy.visit("")
+
+      cy.get(".blogpost")
+        .eq(0)
+        .contains("For Honor is alright")
+      cy.get(".blogpost")
+        .eq(1)
+        .contains("For Honor isn't that bad")
     })
   })
 })

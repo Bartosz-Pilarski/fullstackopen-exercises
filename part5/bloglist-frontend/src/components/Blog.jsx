@@ -19,7 +19,7 @@ const Blog = ({ blog, handleDeletion }) => {
     )
   }
   return(
-    <div style={{ display: "inline-flex", flexDirection: "column", border: "2px solid black", margin: "0.2rem", padding: "0.25rem", textAlign: "center" }}>
+    <div className="blogpost" style={{ display: "inline-flex", flexDirection: "column", border: "2px solid black", margin: "0.2rem", padding: "0.25rem", textAlign: "center" }}>
       <p>{title}</p>
       <ToggleVisibility
         buttonLabels={{
