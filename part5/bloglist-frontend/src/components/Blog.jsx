@@ -11,6 +11,13 @@ const Blog = ({ blog, handleDeletion }) => {
     setBlogLikes(likedBlog.likes)
   }
 
+  const deleteButton = () => {
+    if(blog.user.username === JSON.parse(window.localStorage.getItem("bloglistUser")).username) return (
+      <button onClick={() => handleDeletion(id)}>
+        Delete
+      </button>
+    )
+  }
   return(
     <div style={{ display: "inline-flex", flexDirection: "column", border: "2px solid black", margin: "0.2rem", padding: "0.25rem", textAlign: "center" }}>
       <p>{title}</p>
@@ -27,7 +34,7 @@ const Blog = ({ blog, handleDeletion }) => {
         </div>
         <p>{url}</p>
         <p>{blog.user.username}</p>
-        <button onClick={() => handleDeletion(id)}>Delete</button>
+        {deleteButton()}
       </ToggleVisibility>
     </div>
   )

@@ -141,7 +141,7 @@ describe("Blog app", function() {
           .contains("1")
       })
 
-      it.only("...the author can delete their own blog post", function() {
+      it("...the author can delete their own blog post", function() {
         cy.contains("For Honor isn't that bad")
           .parent()
           .as("blogPost")
@@ -153,6 +153,29 @@ describe("Blog app", function() {
           .click()
 
         cy.contains("For Honor isn't that bad")
+          .should("not.exist")
+      })
+
+      it.only("...the user can't delete a blog they didn't post", function() {
+        const newUser = {
+          username: "MarioMH",
+          name: "Mario Mordhau",
+          password: "thisgameisdead"
+        }
+        cy.request("POST", `${Cypress.env("BACKEND")}/users`, newUser)
+          .login({
+            username: "MarioMH",
+            password: "thisgameisdead"
+          })
+
+        cy.contains("For Honor isn't that bad")
+          .parent()
+          .as("blogPost")
+          .contains("View details")
+          .click()
+
+        cy.get("@blogPost")
+          .contains("Delete")
           .should("not.exist")
       })
     })
