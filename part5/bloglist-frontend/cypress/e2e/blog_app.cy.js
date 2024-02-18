@@ -8,9 +8,9 @@ Cypress.Commands.add("login", ({ username, password }) => {
   })
 })
 
-Cypress.Commands.add("addBlog", ([ title, author, url ]) => {
+Cypress.Commands.add("addBlog", ({ title, author, url }) => {
   cy.request({
-    method: "POST", 
+    method: "POST",
     url: `${Cypress.env("BACKEND")}/blogs`,
     body: {
       title,
@@ -77,7 +77,7 @@ describe("Blog app", function() {
           password: "thisgamesucks"
         })
       })
-      it.only("...user can create a new blog", function() {
+      it("...user can create a new blog", function() {
         cy.contains("Create new blog")
           .click()
 
@@ -96,6 +96,44 @@ describe("Blog app", function() {
 
         cy.contains("Blog For Honor sucks created succesfully")
         cy.contains("For Honor sucks")
+      })
+    })
+
+    describe("With a blog already created", function() {
+      beforeEach(function() {
+        cy.login({
+          username: "JohnFH",
+          password: "thisgamesucks"
+        })
+
+        cy.addBlog({
+          title: "For Honor isn't that bad",
+          author: "Jonathan ForHonor",
+          url: "https://butidontrecommendit.com"
+        })
+
+        cy.visit("")
+      })
+
+      it.only("...a blog can be liked", function() {
+        cy.contains("For Honor isn't that bad")
+          .parent()
+          .as("blogPost")
+          .contains("View details")
+          .click()
+
+        cy.get("@blogPost")
+          .contains("like")
+          .parent()
+          .as("likeContainer")
+          .contains("0")
+
+        cy.get("@blogPost")
+          .contains("like")
+          .click()
+
+        cy.get("@likeContainer")
+          .contains("1")
       })
     })
   })
