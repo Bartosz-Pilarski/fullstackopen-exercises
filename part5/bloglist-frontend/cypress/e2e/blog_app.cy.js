@@ -115,7 +115,7 @@ describe("Blog app", function() {
         cy.visit("")
       })
 
-      it.only("...a blog can be liked", function() {
+      it("...a blog can be liked", function() {
         cy.contains("For Honor isn't that bad")
           .parent()
           .as("blogPost")
@@ -139,6 +139,21 @@ describe("Blog app", function() {
         cy.visit("")
           .get("@likeContainer")
           .contains("1")
+      })
+
+      it.only("...the author can delete their own blog post", function() {
+        cy.contains("For Honor isn't that bad")
+          .parent()
+          .as("blogPost")
+          .contains("View details")
+          .click()
+
+        cy.get("@blogPost")
+          .contains("Delete")
+          .click()
+
+        cy.contains("For Honor isn't that bad")
+          .should("not.exist")
       })
     })
   })
