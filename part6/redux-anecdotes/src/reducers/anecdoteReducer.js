@@ -23,8 +23,11 @@ const reducer = (state = initialState, action) => {
   console.log('state now: ', state)
   console.log('action', action)
   switch(action.type) {
-    case 'VOTE':
-      return state.map((anec) => anec.id === action.payload ? { ...anec, votes: anec.votes+1 } : anec)
+    case 'VOTE': {
+      const anecdotesAfterVote = state.map((anec) => anec.id === action.payload ? { ...anec, votes: anec.votes+1 } : anec)
+      return anecdotesAfterVote.toSorted((a, b) => b.votes - a.votes)
+    }
+    //Doesn't need to be sorted, unless there's negative values. Adding a new anecdote will always put it at the end with 0 votes
     case 'CREATE':
       return [...state, asObject(action.payload)]
     default: return state
