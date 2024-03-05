@@ -17,20 +17,18 @@ const App = () => {
     retry: 1
   })
 
+
+  
   if(anecdotes.isLoading) {
     return (
       <h2>Loading data...</h2>
     )
   }
-
   if(anecdotes.isError) {
     return (
       <h2>Website unavailable due to server issues.</h2>
     )
   }
-
-  console.log(anecdotes.isPending)
-
   return (
     <div>
       <h3>Anecdote app</h3>

@@ -7,3 +7,9 @@ export const getAnecdotes = () => {
     .get(`${baseUrl}/anecdotes`)
     .then((res) => res.data)
 }
+
+export const createAnecdote = (newAnecdote) => {
+  return axios
+    .post(`${baseUrl}/anecdotes`, newAnecdote)
+    .then((res) => res.data)
+}
