@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, Routes, Route, useMatch } from 'react-router-dom'
+import { Link, Routes, Route, useMatch, useNavigate } from 'react-router-dom'
 
 const Menu = () => {
   const padding = {
@@ -48,6 +48,19 @@ const About = () => (
   </div>
 )
 
+const Notification = ({ notification }) => {
+  const style = {
+    border: "2px solid black"
+  }
+
+  if(notification === "" || notification === null) return null
+  return (
+    <h2 style={style}>
+      {notification}
+    </h2>
+  )
+}
+
 const Footer = () => (
   <div>
     Anecdote app for <a href='https://fullstackopen.com/'>Full Stack Open</a>.
@@ -56,20 +69,23 @@ const Footer = () => (
   </div>
 )
 
-const CreateNew = (props) => {
+const CreateNew = ({addNew, setNotification}) => {  
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
 
+  const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    props.addNew({
+    addNew({
       content,
       author,
       info,
       votes: 0
     })
+    setNotification(`Anecdote: ${content} added`)
+    navigate('/anecdotes')
   }
 
   return (
@@ -143,11 +159,12 @@ const App = () => {
     <div>
       <h1>Software anecdotes</h1>
       <Menu />
+      <Notification notification={notification}/>
       <Routes>
         <Route path='/anecdotes' element={<AnecdoteList anecdotes={anecdotes} />}/>
         <Route path='/anecdotes/:id' element={<Anecdote anecdote={anecdote} />}/>
         <Route path='/about' element={<About />}/>
-        <Route path='/new' element={<CreateNew addNew={addNew} />}/>
+        <Route path='/new' element={<CreateNew addNew={addNew} setNotification={setNotification} />}/>
       </Routes>
       <Footer />
     </div>
