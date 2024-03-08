@@ -23,7 +23,6 @@ const CreateNew = ({addNew, setNotification}) => {
   }
 
   const handleReset = (event) => {
-    console.log("yee")
     event.preventDefault()
     content.reset()
     author.reset()
@@ -36,15 +35,15 @@ const CreateNew = ({addNew, setNotification}) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name='content' {...content} />
+          <input name='content' {...content.setup} />
         </div>
         <div>
           author
-          <input name='author' {...author} />
+          <input name='author' {...author.setup} />
         </div>
         <div>
           url for more info
-          <input name='info' {...info} />
+          <input name='info' {...info.setup} />
         </div>
         <button>create</button>
         <button onClick={handleReset}>reset</button>

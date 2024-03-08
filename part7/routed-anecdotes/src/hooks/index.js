@@ -11,10 +11,13 @@ export const useField = (type) => {
     setValue('')
   }
 
+  const setup = {type, value, onChange}
+
   return {
     type,
     value,
     onChange,
-    reset
+    reset,
+    setup
   }
 }
