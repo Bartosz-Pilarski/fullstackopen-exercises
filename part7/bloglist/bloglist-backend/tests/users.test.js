@@ -19,7 +19,7 @@ describe("Creating users", () => {
       const newUser = {
         username: "root",
         name: "superuser",
-        password: "NoneOYerBusiness"
+        password: "NoneOYerBusiness",
       }
 
       const savedUser = await api
@@ -30,7 +30,7 @@ describe("Creating users", () => {
 
       const usersAtEnd = await helper.usersInDb()
 
-      expect(usersAtEnd.length).toEqual(usersAtStart.length+1)
+      expect(usersAtEnd.length).toEqual(usersAtStart.length + 1)
       expect(usersAtEnd).toContainEqual(savedUser.body)
     })
   })
@@ -40,39 +40,30 @@ describe("Creating users", () => {
       const newUser = {
         username: "root",
         name: "doppelganger",
-        password: "phony"
+        password: "phony",
       }
 
-      await api
-        .post("/api/users")
-        .send(newUser)
-        .expect(400)
+      await api.post("/api/users").send(newUser).expect(400)
     })
 
     test("Usernames need to be at least 3 characters long", async () => {
       const newUser = {
         username: "eh",
         name: "ebenezer hearmoore",
-        password: "loveInitials"
+        password: "loveInitials",
       }
 
-      await api
-        .post("/api/users")
-        .send(newUser)
-        .expect(400)
+      await api.post("/api/users").send(newUser).expect(400)
     })
 
     test("Passwords need to be at least 3 characters long", async () => {
       const newUser = {
         username: "grug",
         name: "grug caveman",
-        password: "ug"
+        password: "ug",
       }
 
-      await api
-        .post("/api/users")
-        .send(newUser)
-        .expect(400)
+      await api.post("/api/users").send(newUser).expect(400)
     })
 
     test("No invalid users were added to the database", async () => {
@@ -86,7 +77,7 @@ describe("Logging in", () => {
   test("Logging in as a previously created user is possible", async () => {
     const loginInfo = {
       username: "root",
-      password: "NoneOYerBusiness"
+      password: "NoneOYerBusiness",
     }
 
     await api
@@ -96,27 +87,21 @@ describe("Logging in", () => {
       .expect("Content-Type", /application\/json/)
   })
 
-  describe("It's impossible to log in while missing:",  () => {
+  describe("It's impossible to log in while missing:", () => {
     test("The username", async () => {
       const loginInfo = {
-        password: "NoneOYerBusiness"
+        password: "NoneOYerBusiness",
       }
 
-      await api
-        .post("/api/login")
-        .send(loginInfo)
-        .expect(400)
+      await api.post("/api/login").send(loginInfo).expect(400)
     })
 
     test("The password", async () => {
       const loginInfo = {
-        username: "root"
+        username: "root",
       }
 
-      await api
-        .post("/api/login")
-        .send(loginInfo)
-        .expect(400)
+      await api.post("/api/login").send(loginInfo).expect(400)
     })
   })
 
@@ -124,35 +109,26 @@ describe("Logging in", () => {
     test("Wrong password", async () => {
       const loginInfo = {
         username: "root",
-        password: "yahaharr"
+        password: "yahaharr",
       }
 
-      await api
-        .post("/api/login")
-        .send(loginInfo)
-        .expect(401)
+      await api.post("/api/login").send(loginInfo).expect(401)
     })
     test("Wrong username", async () => {
       const loginInfo = {
         username: "rewt",
-        password: "NoneOYerBusiness"
+        password: "NoneOYerBusiness",
       }
 
-      await api
-        .post("/api/login")
-        .send(loginInfo)
-        .expect(401)
+      await api.post("/api/login").send(loginInfo).expect(401)
     })
     test("Both username and password", async () => {
       const loginInfo = {
         username: "rewt",
-        password: "yaharr"
+        password: "yaharr",
       }
 
-      await api
-        .post("/api/login")
-        .send(loginInfo)
-        .expect(401)
+      await api.post("/api/login").send(loginInfo).expect(401)
     })
   })
 })

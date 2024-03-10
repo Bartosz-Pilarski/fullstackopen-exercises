@@ -6,12 +6,18 @@ const User = require("../models/user")
 usersRouter.post("/", async (req, res) => {
   const { username, name, password } = req.body
 
-  if(!username) res.status(400).json({ error: "Username required" })
-  if(!name) res.status(400).json({ error: "Name required" })
-  if(!password) res.status(400).json({ error: "Password required" })
+  if (!username) res.status(400).json({ error: "Username required" })
+  if (!name) res.status(400).json({ error: "Name required" })
+  if (!password) res.status(400).json({ error: "Password required" })
 
-  if(username.length < 3) res.status(400).json({ error: "Username must be at least 3 characters long" })
-  if(password.length < 3) res.status(400).json({ error: "Password must be at least 3 characters long" })
+  if (username.length < 3)
+    res
+      .status(400)
+      .json({ error: "Username must be at least 3 characters long" })
+  if (password.length < 3)
+    res
+      .status(400)
+      .json({ error: "Password must be at least 3 characters long" })
 
   const saltingRounds = 10
   const hashedPassword = await bcrypt.hash(password, saltingRounds)
@@ -19,7 +25,7 @@ usersRouter.post("/", async (req, res) => {
   const hashedUser = new User({
     username: username,
     name: name,
-    passwordHash: hashedPassword
+    passwordHash: hashedPassword,
   })
 
   const newUser = await hashedUser.save()
@@ -27,9 +33,12 @@ usersRouter.post("/", async (req, res) => {
 })
 
 usersRouter.get("/", async (req, res) => {
-  const users = await User
-    .find({})
-    .populate("blogs", { title: 1, author: 1, likes: 1, url: 1 })
+  const users = await User.find({}).populate("blogs", {
+    title: 1,
+    author: 1,
+    likes: 1,
+    url: 1,
+  })
   res.status(200).json(users)
 })
 

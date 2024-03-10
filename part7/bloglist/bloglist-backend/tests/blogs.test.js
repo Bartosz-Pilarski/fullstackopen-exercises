@@ -17,19 +17,15 @@ beforeAll(async () => {
   const testUser = {
     username: "tester",
     name: "blogTester",
-    password: "yeah"
+    password: "yeah",
   }
-  await api
-    .post("/api/users")
-    .send(testUser)
+  await api.post("/api/users").send(testUser)
 
   const credentials = {
     username: "tester",
-    password: "yeah"
+    password: "yeah",
   }
-  const login = await api
-    .post("/api/login")
-    .send(credentials)
+  const login = await api.post("/api/login").send(credentials)
 
   token = login.body.token
 
@@ -50,7 +46,7 @@ describe("Getting blogs", () => {
     const blogs = await api.get("/api/blogs")
     expect(blogs.body.length).toEqual(4)
   }, 100000)
-  test("Blogs have an \"id\" property, instead of \"_id\"", async () => {
+  test('Blogs have an "id" property, instead of "_id"', async () => {
     const blogs = await api.get("/api/blogs")
     expect(blogs.body[0].id).toBeDefined()
   }, 100000)
@@ -62,7 +58,7 @@ describe("Posting blogs", () => {
       title: "Writing unit tests",
       author: "Ubert Theodore Est",
       url: "https://utest.com",
-      likes: 1
+      likes: 1,
     }
 
     const savedPost = await api
@@ -74,7 +70,7 @@ describe("Posting blogs", () => {
 
     const blogsAfterPost = await helper.blogsInDb()
 
-    expect(blogsAfterPost.length).toEqual(helper.initialBlogs.length+1)
+    expect(blogsAfterPost.length).toEqual(helper.initialBlogs.length + 1)
 
     blogToDelete = savedPost.body
   })
@@ -82,7 +78,7 @@ describe("Posting blogs", () => {
     const newPost = {
       title: "Guys please like my blog :(",
       author: "Un Popular",
-      url: "https://agagsdgdsgxvxxxxx.pl"
+      url: "https://agagsdgdsgxvxxxxx.pl",
     }
 
     const savedPost = await api
@@ -98,7 +94,7 @@ describe("Posting blogs", () => {
     const newPost = {
       author: "Joshua Header",
       url: "https://ihatetitles.com",
-      likes: 10
+      likes: 10,
     }
 
     await api
@@ -111,7 +107,7 @@ describe("Posting blogs", () => {
     const newPost = {
       title: "This blog is in my notepad :D",
       author: "George? *illegible*",
-      likes: 1
+      likes: 1,
     }
 
     await api
@@ -149,7 +145,7 @@ describe("Editing blogs", () => {
       title: "We need to keep changing",
       author: "Jorg Evolution",
       url: "https://iwillchangethesite.too",
-      likes: 52
+      likes: 52,
     }
 
     const savedBlog = await api
@@ -167,13 +163,10 @@ describe("Editing blogs", () => {
     const newBlog = {
       author: "Hubert Ungry",
       url: "https://sohungryiatethetitle.de",
-      likes: 10
+      likes: 10,
     }
 
-    await api
-      .put(`/api/blogs/${blogToEdit.id}`)
-      .send(newBlog)
-      .expect(400)
+    await api.put(`/api/blogs/${blogToEdit.id}`).send(newBlog).expect(400)
   })
   test("Attempting to edit a blog without providing an url is refused with status 400", async () => {
     const blogsInDb = await helper.blogsInDb()
@@ -182,13 +175,10 @@ describe("Editing blogs", () => {
     const newBlog = {
       title: "Man I HATE browsers.",
       author: "Bowser",
-      likes: 2
+      likes: 2,
     }
 
-    await api
-      .put(`/api/blogs/${blogToEdit.id}`)
-      .send(newBlog)
-      .expect(400)
+    await api.put(`/api/blogs/${blogToEdit.id}`).send(newBlog).expect(400)
   })
 })
 

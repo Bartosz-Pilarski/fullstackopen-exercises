@@ -7,5 +7,5 @@ const usersInDb = async () => {
 }
 
 module.exports = {
-  usersInDb
+  usersInDb,
 }

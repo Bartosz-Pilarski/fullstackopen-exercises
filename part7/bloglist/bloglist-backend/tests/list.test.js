@@ -15,7 +15,7 @@ const blogs = [
     author: "Not me",
     url: "https://example.com",
     likes: 5,
-    __v: 0
+    __v: 0,
   },
   {
     _id: "6b422aa71b54a676234d17f8",
@@ -23,7 +23,7 @@ const blogs = [
     author: "Someone",
     url: "https://google.pl",
     likes: 1,
-    __v: 1
+    __v: 1,
   },
   {
     _id: "5a422aa71b54a669234d17f8",
@@ -31,7 +31,7 @@ const blogs = [
     author: "Me",
     url: "https://example.com",
     likes: 7,
-    __v: 0
+    __v: 0,
   },
   {
     _id: "6b422aa71b54a676234d17f8",
@@ -39,7 +39,7 @@ const blogs = [
     author: "Someone",
     url: "https://google.com",
     likes: 2,
-    __v: 1
+    __v: 1,
   },
   {
     _id: "6b422aa71b54a676234d17f8",
@@ -47,8 +47,8 @@ const blogs = [
     author: "Someone",
     url: "https://google.de",
     likes: 1,
-    __v: 2
-  }
+    __v: 2,
+  },
 ]
 
 describe("Total likes", () => {
@@ -85,15 +85,24 @@ describe("Most prolific blog author", () => {
   })
 
   test("In a list of only one entry is the author of said entry with only one blog credited", () => {
-    expect(listHelper.mostBlogs([blogs[1]])).toEqual({ author: "Someone", blogs: 1 })
+    expect(listHelper.mostBlogs([blogs[1]])).toEqual({
+      author: "Someone",
+      blogs: 1,
+    })
   })
 
   test("In a list of multiple entries from the same author, is said author with the correct amount of blogs credited", () => {
-    expect(listHelper.mostBlogs([blogs[3], blogs[4]])).toEqual({ author: "Someone", blogs: 2 })
+    expect(listHelper.mostBlogs([blogs[3], blogs[4]])).toEqual({
+      author: "Someone",
+      blogs: 2,
+    })
   })
 
   test("Is calculated and credited correctly in bigger, diverse, lists", () => {
-    expect(listHelper.mostBlogs(blogs)).toEqual({ author: "Someone", blogs: 3 })
+    expect(listHelper.mostBlogs(blogs)).toEqual({
+      author: "Someone",
+      blogs: 3,
+    })
   })
 })
 
@@ -102,10 +111,16 @@ describe("Most likes gathered by author", () => {
     expect(listHelper.mostLikes([])).toEqual({})
   })
   test("In a list of only one entry, is the author of said entry and the appropriate amount of likes", () => {
-    expect(listHelper.mostLikes([blogs[3]])).toEqual({ author: "Someone", likes: 2 })
+    expect(listHelper.mostLikes([blogs[3]])).toEqual({
+      author: "Someone",
+      likes: 2,
+    })
   })
   test("In a list of multiple entries from the same author, is said author with the correct amount of likes", () => {
-    expect(listHelper.mostLikes([blogs[3], blogs[4]])).toEqual({ author: "Someone", likes: 3 })
+    expect(listHelper.mostLikes([blogs[3], blogs[4]])).toEqual({
+      author: "Someone",
+      likes: 3,
+    })
   })
   test("Is calculated properly in bigger, diverse, lists", () => {
     expect(listHelper.mostLikes(blogs)).toEqual({ author: "Me", likes: 7 })

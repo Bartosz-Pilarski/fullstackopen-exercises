@@ -9,24 +9,27 @@ blogRouter.get("/", async (req, res) => {
 blogRouter.get("/:id", async (req, res) => {
   const blog = await Blog.findById(req.params.id)
 
-  if (blog) { res.json(blog) }
-  else { res.status(404).end() }
+  if (blog) {
+    res.json(blog)
+  } else {
+    res.status(404).end()
+  }
 })
 
 blogRouter.post("/", async (req, res) => {
   const body = req.body
   const user = req.user
 
-  if(!user) return res.status(401).json({ error: "Invalid token" })
-  if(!body.title) return res.status(400).json({ error: "No title provided" })
-  if(!body.url) return res.status(400).json({ error: "No url provided" })
+  if (!user) return res.status(401).json({ error: "Invalid token" })
+  if (!body.title) return res.status(400).json({ error: "No title provided" })
+  if (!body.url) return res.status(400).json({ error: "No url provided" })
 
   const blog = new Blog({
     title: body.title,
     author: body.author,
     url: body.url,
     likes: Number(body.likes) || 0,
-    user: user.id
+    user: user.id,
   })
 
   user.blogs = user.blogs.concat(blog)
@@ -41,10 +44,11 @@ blogRouter.post("/", async (req, res) => {
 blogRouter.delete("/:id", async (req, res) => {
   const id = req.params.id
   const user = req.user
-  if(!user) return res.status(401).json({ error: "Invalid token" })
+  if (!user) return res.status(401).json({ error: "Invalid token" })
 
   const blogToDelete = await Blog.findById(id)
-  if(blogToDelete.user.toString() !== user._id.toString()) return res.status(401).json({ error: "User is not creator of the blog" })
+  if (blogToDelete.user.toString() !== user._id.toString())
+    return res.status(401).json({ error: "User is not creator of the blog" })
 
   let userBlogs = user.blogs.filter((blog) => blog.toString() !== id)
   user.blogs = userBlogs
@@ -58,18 +62,21 @@ blogRouter.delete("/:id", async (req, res) => {
 blogRouter.put("/:id", async (req, res) => {
   const id = req.params.id
   const currentState = await Blog.findById(id)
-  console.log(currentState.likes+1)
-  const updatedLikes = currentState.likes+1
-  const editedBlog = await Blog.findByIdAndUpdate(id, {
-    ...currentState._doc,
-    likes: updatedLikes
-  }, { new: true, runValidators: true, context: "query" })
+  console.log(currentState.likes + 1)
+  const updatedLikes = currentState.likes + 1
+  const editedBlog = await Blog.findByIdAndUpdate(
+    id,
+    {
+      ...currentState._doc,
+      likes: updatedLikes,
+    },
+    { new: true, runValidators: true, context: "query" },
+  )
   console.log({
     ...currentState._doc,
-    likes: updatedLikes
+    likes: updatedLikes,
   })
   res.status(200).json(editedBlog)
 })
-
 
 module.exports = blogRouter
