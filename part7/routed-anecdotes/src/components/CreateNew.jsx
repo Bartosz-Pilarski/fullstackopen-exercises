@@ -1,4 +1,5 @@
-import { useState } from "react"
+import { Form, Button } from "react-bootstrap"
+
 import { useNavigate } from "react-router-dom"
 
 import { useField } from "../hooks"
@@ -18,7 +19,10 @@ const CreateNew = ({addNew, setNotification}) => {
       info: info.value,
       votes: 0
     })
-    setNotification(`Anecdote: ${content.value} added`)
+    setNotification({
+      content: `Anecdote: ${content.value} added`,
+      variant: 'success'
+    })
     navigate('/anecdotes')
   }
 
@@ -32,22 +36,31 @@ const CreateNew = ({addNew, setNotification}) => {
   return (
     <div>
       <h2>create a new anecdote</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          content
-          <input name='content' {...content.setup} />
-        </div>
-        <div>
-          author
-          <input name='author' {...author.setup} />
-        </div>
-        <div>
-          url for more info
-          <input name='info' {...info.setup} />
-        </div>
-        <button>create</button>
-        <button onClick={handleReset}>reset</button>
-      </form>
+      <Form onSubmit={handleSubmit}>
+        <Form.Group>
+          <Form.Label>Content: </Form.Label>
+          <Form.Control 
+            name="content"
+            {...content.setup}
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Author: </Form.Label>
+          <Form.Control 
+            name="author"
+            {...author.setup}
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Url for more info: </Form.Label>
+          <Form.Control 
+            name="info"
+            {...info.setup}
+          />
+        </Form.Group>
+        <Button variant="primary" type="submit">create</Button>
+        <Button variant="secondary" onClick={handleReset}>reset</Button>
+      </Form>
     </div>
   )
 }

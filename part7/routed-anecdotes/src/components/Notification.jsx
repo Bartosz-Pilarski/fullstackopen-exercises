@@ -1,13 +1,12 @@
-const Notification = ({ notification }) => {
-  const style = {
-    border: "2px solid black"
-  }
+import { Alert } from "react-bootstrap"
 
-  if(notification === "" || notification === null) return null
+const Notification = ({ notification }) => {
+  if(notification.content === "" || notification.content === undefined) return null
+
   return (
-    <h2 style={style}>
-      {notification}
-    </h2>
+    <Alert variant={notification.variant}>
+      {notification.content}
+    </Alert>
   )
 }
 
