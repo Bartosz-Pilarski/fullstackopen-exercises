@@ -1,0 +1,8 @@
+node_modules
+.env
+
+# Part of the material, not own code
+tests/average.test.js
+tests/reverse.test.js
+
+utils/for_testing.js

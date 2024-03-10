@@ -1,0 +1,6 @@
+node_modules
+dist
+.eslintrc.cjs
+cypress.config.js
+cypress/fixtures
+cypress/support
