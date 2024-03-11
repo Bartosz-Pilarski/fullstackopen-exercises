@@ -1,6 +1,9 @@
+import { useSelector } from "react-redux"
 import Blog from "./Blog"
 
-const Bloglist = ({ blogs, handleDeletion }) => {
+const Bloglist = ({ handleDeletion }) => {
+  const blogs = useSelector(state => state.blogs)
+
   return(
     <div>
       <h2>blogs</h2>
@@ -11,4 +14,4 @@ const Bloglist = ({ blogs, handleDeletion }) => {
   )
 }
 
-export default Bloglistnotification
+export default Bloglist

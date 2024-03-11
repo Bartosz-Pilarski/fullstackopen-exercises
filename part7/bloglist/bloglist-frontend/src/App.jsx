@@ -1,5 +1,8 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
+import { useDispatch } from "react-redux"
+
 import blogService from "./services/blogs"
+import { initializeBlogs } from "./reducers/blogsReducer"
 
 import Bloglist from "./components/Bloglist"
 import Notification from "./components/Notification"
@@ -7,7 +10,7 @@ import ToggleVisibility from "./components/ToggleVisibility"
 
 import LoginForm from "./components/LoginForm"
 import BlogForm from "./components/BlogForm"
-import { useRef } from "react"
+
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -17,6 +20,7 @@ const App = () => {
     isError: false
   })
 
+  const dispatch = useDispatch()
   const blogFormRef = useRef()
 
   /*
@@ -27,12 +31,7 @@ const App = () => {
 
   //Get initial blogs
   useEffect(() => {
-    const fetchAndSortBlogs = async () => {
-      const blogsUnsorted = await blogService.getAll()
-      const blogs = blogsUnsorted.toSorted((a, b) => b.likes - a.likes)
-      setBlogs( blogs )
-    }
-    fetchAndSortBlogs()
+    dispatch(initializeBlogs())
   }, [])
 
   //Set up user if logged in
@@ -52,24 +51,24 @@ const App = () => {
   */
 
   // Save blog to database, toggle visibility of form.
-  const addBlog = async (newBlog) => {
-    blogFormRef.current.handleToggleVisibility()
-    try{
-      const savedBlog = await blogService.create(newBlog)
+  // const addBlog = async (newBlog) => {
+  //   blogFormRef.current.handleToggleVisibility()
+  //   try{
+  //     const savedBlog = await blogService.create(newBlog)
 
-      setBlogs(blogs.concat(savedBlog))
-      setNotification({ content: `Blog ${savedBlog.title} created succesfully`, isError: false })
+  //     setBlogs(blogs.concat(savedBlog))
+  //     setNotification({ content: `Blog ${savedBlog.title} created succesfully`, isError: false })
 
-      setTimeout(() => {
-        setNotification({ content: null, isError: false })
-      }, 3000)
-    } catch(err) {
-      setNotification({ content: "Error while creating blog", isError: true })
-      setTimeout(() => {
-        setNotification({ content: null, isError: false })
-      }, 3000)
-    }
-  }
+  //     setTimeout(() => {
+  //       setNotification({ content: null, isError: false })
+  //     }, 3000)
+  //   } catch(err) {
+  //     setNotification({ content: "Error while creating blog", isError: true })
+  //     setTimeout(() => {
+  //       setNotification({ content: null, isError: false })
+  //     }, 3000)
+  //   }
+  // }
 
   const deleteBlog = async (blogId) => {
     if(window.confirm("Do you really want to delete this blog?")) {
@@ -99,9 +98,9 @@ const App = () => {
           }}
           ref={blogFormRef}
         >
-          <BlogForm addBlog={addBlog}/>
+          <BlogForm />
         </ToggleVisibility>
-        <Bloglist blogs={blogs} handleDeletion={deleteBlog}/>
+        <Bloglist handleDeletion={deleteBlog}/>
       </div>
     )
   }
@@ -119,9 +118,11 @@ const App = () => {
 
   return (
     <div>
-      {user === null
-        ? userNotLoggedIn()
-        : userLoggedIn()}
+      {
+        user === null
+          ? userNotLoggedIn()
+          : userLoggedIn()
+      }
     </div>
   )
 }
