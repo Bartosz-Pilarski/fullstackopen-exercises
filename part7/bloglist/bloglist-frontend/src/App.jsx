@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 
 import blogService from "./services/blogs"
 import { initializeBlogs } from "./reducers/blogsReducer"
@@ -10,45 +10,24 @@ import ToggleVisibility from "./components/ToggleVisibility"
 
 import LoginForm from "./components/LoginForm"
 import BlogForm from "./components/BlogForm"
+import { loadUser, logoutUser } from "./reducers/userReducer"
 
 
 const App = () => {
-  const [user, setUser] = useState(null)
+  const user = useSelector((state) => state.user)
 
   const dispatch = useDispatch()
   const blogFormRef = useRef()
 
-  /*
-    ------------------
-          EFFECTS
-    ------------------
-  */
-
-  //Get initial blogs
+  //Get initial blogs and set up user if logged in
   useEffect(() => {
     dispatch(initializeBlogs())
+    dispatch(loadUser())
   }, [])
-
-  //Set up user if logged in
-  useEffect(() => {
-    const storedUserJSON = window.localStorage.getItem("bloglistUser")
-    if(storedUserJSON) {
-      const user = JSON.parse(storedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
-    }
-  }, [])
-
-  /*
-    ------------------
-        FUNCTIONS
-    ------------------
-  */
 
   // Log user out, delete localStorage of user.
   const handleLogout = () => {
-    window.localStorage.removeItem("bloglistUser")
-    setUser(null)
+    dispatch(logoutUser())
   }
 
   //If user is logged in, display blogs and allow for blog creation.
@@ -78,7 +57,7 @@ const App = () => {
       <div>
         <Notification />
         <br/>
-        <LoginForm setUser={setUser}/>
+        <LoginForm />
       </div>
     )
   }
