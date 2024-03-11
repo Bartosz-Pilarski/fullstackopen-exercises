@@ -11,4 +11,4 @@ const Bloglist = ({ blogs, handleDeletion }) => {
   )
 }
 
-export default Bloglist
+export default Bloglistnotification

@@ -1,9 +1,13 @@
 import { useState } from "react"
+import { useDispatch } from "react-redux"
+import { setNotification } from "../reducers/notificationReducer"
 
 const BlogForm = ({ addBlog }) => {
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
   const [url, setUrl] = useState("")
+
+  const dispatch = useDispatch()
 
   const handleBlogCreation = async (event) => {
     event.preventDefault()
@@ -13,6 +17,8 @@ const BlogForm = ({ addBlog }) => {
       url
     }
     addBlog(newBlog)
+
+    dispatch(setNotification({ isError: false, content: `Blog ${title} created!` }, 5000))
 
     setTitle("")
     setAuthor("")
