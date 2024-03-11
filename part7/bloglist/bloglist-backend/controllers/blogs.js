@@ -71,7 +71,8 @@ blogRouter.put("/:id", async (req, res) => {
       likes: updatedLikes,
     },
     { new: true, runValidators: true, context: "query" },
-  )
+    )
+    .populate("user", { username: 1, name: 1 })
   console.log({
     ...currentState._doc,
     likes: updatedLikes,

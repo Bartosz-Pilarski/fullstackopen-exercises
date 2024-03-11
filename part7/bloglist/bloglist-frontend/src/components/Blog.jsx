@@ -1,14 +1,24 @@
-import ToggleVisibility from "./ToggleVisibility"
-import blogService from "../services/blogs"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useDispatch } from "react-redux"
 
-const Blog = ({ blog, handleDeletion }) => {
-  const { title, author, url, likes, id } = blog
+import ToggleVisibility from "./ToggleVisibility"
+import { deleteBlog, likeBlog } from "../reducers/blogsReducer"
+
+const Blog = ({ blog }) => {
+  const { title, author, url, likes, id, user } = blog
   const [blogLikes, setBlogLikes] = useState(likes)
 
+  useEffect(() => {
+    setBlogLikes(likes)
+  }, [likes])
+
+  const dispatch = useDispatch()
+
   const handleLiking = async (blogId) => {
-    const likedBlog = await blogService.like(blogId)
-    setBlogLikes(likedBlog.likes)
+    dispatch(likeBlog(blogId))
+  }
+  const handleDeletion = async (blogId) => {
+    dispatch(deleteBlog(blogId))
   }
 
   const deleteButton = () => {
@@ -33,7 +43,7 @@ const Blog = ({ blog, handleDeletion }) => {
           <button onClick={() => handleLiking(id)}>like</button>
         </div>
         <p>{url}</p>
-        <p>{blog.user.username}</p>
+        <p>{user.username}</p>
         {deleteButton()}
       </ToggleVisibility>
     </div>
