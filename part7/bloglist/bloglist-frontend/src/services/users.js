@@ -8,4 +8,11 @@ const getAll = () => {
     .then(res => res.data)
 }
 
-export { getAll }
+const getById = (userId) => {
+  return axios
+    .get(`${baseUrl}/${userId}`)
+    .then(res => res.data)
+    .catch(err => null)
+}
+
+export { getAll, getById }

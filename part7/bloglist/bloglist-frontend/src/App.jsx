@@ -12,6 +12,7 @@ import Menu from "./components/Menu"
 
 import Blogs from "./views/Blogs"
 import Users from "./views/Users"
+import UserDetails from "./views/UserDetails"
 
 
 const App = () => {
@@ -40,8 +41,9 @@ const App = () => {
         <h1> Hello, {user.name} </h1>
         <button onClick={() => handleLogout()}>log out</button>
         <Routes>
-          <Route path="/" element={<Blogs/>} />
-          <Route path="/users" element={<Users/>} />
+          <Route path="/" element={<Blogs />} />
+          <Route path="/users" element={<Users />} />
+          <Route path="/users/:id" element={<UserDetails />} />
         </Routes>
       </div>
     )
