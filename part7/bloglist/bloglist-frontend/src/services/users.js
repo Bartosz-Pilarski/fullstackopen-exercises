@@ -15,4 +15,4 @@ const getById = (userId) => {
     .catch(err => null)
 }
 
-export { getAll, getById }
+export default { getAll, getById }

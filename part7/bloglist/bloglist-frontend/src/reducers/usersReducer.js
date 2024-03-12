@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { getAll } from "../services/users"
+import usersService from "../services/users"
 
 /*
   !!! this reducer handles generic user data          !!!
@@ -22,7 +22,7 @@ export const { setUsers } = usersSlice.actions
 
 export const initializeUsers = () => {
   return async (dispatch) => {
-    const usersData = await getAll()
+    const usersData = await usersService.getAll()
     dispatch(setUsers(usersData))
   }
 }

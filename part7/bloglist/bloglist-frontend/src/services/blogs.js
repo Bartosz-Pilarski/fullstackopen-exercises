@@ -4,9 +4,14 @@ const baseUrl = "/api/blogs"
 let token = ""
 const setToken = (newToken) => token = `Bearer ${newToken}`
 
-const getAll = () => {
-  const request = axios.get(baseUrl)
-  return request.then(response => response.data)
+const getAll = async () => {
+  const request = await axios.get(baseUrl)
+  return request.data
+}
+
+const getBlogById = async (blogId) => {
+  const request = await axios.get(`${baseUrl}/${blogId}`)
+  return request.data
 }
 
 const create = async (newBlog) => {
@@ -34,4 +39,4 @@ const deleteBlog = async (blogId) => {
   return request.data
 }
 
-export default { getAll, create, like, deleteBlog, setToken }
+export default { getAll, getBlogById, create, like, deleteBlog, setToken }

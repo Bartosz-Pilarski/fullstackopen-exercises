@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
+import { Link } from "react-router-dom"
 
 import ToggleVisibility from "./ToggleVisibility"
 import { deleteBlog, likeBlog } from "../reducers/blogsReducer"
@@ -30,7 +31,7 @@ const Blog = ({ blog }) => {
   }
   return(
     <div className="blogpost" style={{ display: "inline-flex", flexDirection: "column", border: "2px solid black", margin: "0.2rem", padding: "0.25rem", textAlign: "center" }}>
-      <p>{title}</p>
+      <p><Link to={`/blogs/${id}`}>{title}</Link></p>
       <ToggleVisibility
         buttonLabels={{
           open: "View details",

@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom"
 
-import { getById } from "../services/users"
+import usersService from "../services/users"
 import { useEffect, useState } from "react"
 
 import UserInfo from "../components/UserInfo"
@@ -16,7 +16,7 @@ const UserDetails = () => {
 
   useEffect(() => {
     const initializeUserdata = async () => {
-      const newUser = await getById(id)
+      const newUser = await usersService.getById(id)
       setUser(newUser)
     }
     initializeUserdata()

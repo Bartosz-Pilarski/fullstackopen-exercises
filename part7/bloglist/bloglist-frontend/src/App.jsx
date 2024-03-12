@@ -13,6 +13,7 @@ import Menu from "./components/Menu"
 import Blogs from "./views/Blogs"
 import Users from "./views/Users"
 import UserDetails from "./views/UserDetails"
+import BlogDetails from "./views/BlogDetails"
 
 
 const App = () => {
@@ -42,6 +43,8 @@ const App = () => {
         <button onClick={() => handleLogout()}>log out</button>
         <Routes>
           <Route path="/" element={<Blogs />} />
+          <Route path="/blogs" element={<Blogs />} />
+          <Route path="/blogs/:id" element={<BlogDetails />}/>
           <Route path="/users" element={<Users />} />
           <Route path="/users/:id" element={<UserDetails />} />
         </Routes>
