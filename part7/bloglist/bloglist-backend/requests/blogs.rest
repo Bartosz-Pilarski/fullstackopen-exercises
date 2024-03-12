@@ -3,17 +3,17 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY1YzNmNzA3YWIwOGNmNjI1ZmFkYjRkZCIsImlhdCI6MTcwNzM0MzU2NH0.aT1zK04nadAnZyRX-yCyLqWxgF-3c6bfPeale6LygDA
 
 {
-  "title": "maybe",
+  "title": "comments",
   "author": "it's not",
   "url": "awkward!",
-  "likes": 96
+  "likes": 2
 }
 
 ###
-GET http://localhost:3003/api/blogs/65c3f8eed5d0a11cfab600c6
+GET http://localhost:3003/api/blogs/65f0b1252e6fc17c605652e8
 
 ###
-DELETE http://localhost:3003/api/blogs/65c401d69d03e04295ac5662
+DELETE http://localhost:3003/api/blogs/65f0b4d9acc4c6c618b1c98a
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY1YzNmNzA3YWIwOGNmNjI1ZmFkYjRkZCIsImlhdCI6MTcwNzM0MzU2NH0.aT1zK04nadAnZyRX-yCyLqWxgF-3c6bfPeale6LygDA
 
 ###

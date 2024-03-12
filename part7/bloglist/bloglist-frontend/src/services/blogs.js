@@ -14,6 +14,11 @@ const getBlogById = async (blogId) => {
   return request.data
 }
 
+const getCommentsById = async (blogId) => {
+  const request = await axios.get(`${baseUrl}/${blogId}/comments`)
+  return request.data
+}
+
 const create = async (newBlog) => {
   const config = {
     headers: {
@@ -39,4 +44,4 @@ const deleteBlog = async (blogId) => {
   return request.data
 }
 
-export default { getAll, getBlogById, create, like, deleteBlog, setToken }
+export default { getAll, getBlogById, getCommentsById, create, like, deleteBlog, setToken }

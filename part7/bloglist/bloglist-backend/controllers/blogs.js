@@ -1,5 +1,6 @@
 const blogRouter = require("express").Router()
 const Blog = require("../models/blog")
+const Comment = require("../models/comment")
 
 blogRouter.get("/", async (req, res) => {
   const blogs = await Blog.find({}).populate("user", { username: 1, name: 1 })
@@ -7,7 +8,7 @@ blogRouter.get("/", async (req, res) => {
 })
 
 blogRouter.get("/:id", async (req, res) => {
-  const blog = await Blog.findById(req.params.id)
+  const blog = await Blog.findById(req.params.id).populate("comments", { content: 1 })
 
   if (blog) {
     res.json(blog)
@@ -78,6 +79,38 @@ blogRouter.put("/:id", async (req, res) => {
     likes: updatedLikes,
   })
   res.status(200).json(editedBlog)
+})
+
+/*
+  !- COMMENT FUNCTIONALITY -!
+*/
+
+blogRouter.post("/:id/comments", async (req, res) => {
+  const blogId = req.params.id
+  const body = req.body
+
+  if(!body.content) return res.status(401).json({ error: "Missing comment content" })
+
+  const blog = await Blog.findById(blogId)
+
+  const comment = new Comment({
+    content: body.content,
+    blog: blog.id
+  }) 
+
+  blog.comments = blog.comments.concat(comment)
+
+  await blog.save()
+  const savedBlog = await comment.save()
+
+  res.status(200).json(savedBlog)
+})
+
+blogRouter.get("/:id/comments", async (req, res) => {
+  const blogId = req.params.id
+
+  const blog = await Blog.findById(blogId).populate("comments", { content: 1 })
+  res.status(200).json(blog.comments)
 })
 
 module.exports = blogRouter

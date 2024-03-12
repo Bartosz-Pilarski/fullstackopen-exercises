@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom"
 import BlogInfo from "../components/BlogInfo"
 import { useEffect, useState } from "react"
 import blogsService from "../services/blogs"
+import BlogComments from "../components/BlogComments"
 
 const BlogDetails = () => {
   const id = useParams().id
@@ -19,7 +20,11 @@ const BlogDetails = () => {
   if(!blog) return (<h2> Blog not found </h2>)
 
   return (
-    <BlogInfo blog={blog} />
+    <>
+      <BlogInfo blog={blog} />
+      <BlogComments blog={blog} />
+    </>
+
   )
 }
 

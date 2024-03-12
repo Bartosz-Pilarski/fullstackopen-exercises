@@ -16,7 +16,7 @@ const BlogInfo = ({ blog }) => {
     <div>
       <h2> {blog.title} </h2>
       <h3> by {blog.author} </h3>
-      <a href={blog.url}>{blog.url}</a>
+      <a href={`http://${blog.url}`}>{blog.url}</a>
       <p>{likes} likes <button onClick={() => { handleLiking(blog.id) }}> Like</button></p>
     </div>
   )
