@@ -64,7 +64,7 @@ const App = () => {
   }
 
   return (
-    <div>
+    <div className="container">
       {
         user === null
           ? userNotLoggedIn()
