@@ -1,21 +1,36 @@
+import { useDispatch } from "react-redux"
 import { useState } from "react"
 
-const BlogComments = ({ blog }) => {
-  const [comment, setComment] = useState("")
+import { useField } from "../hooks"
+import { commentOnBlog } from "../reducers/blogsReducer"
+import blogsService from "../services/blogs"
 
-  const handleCommenting = (event) => {
+const BlogComments = ({ blog }) => {
+  const dispatch = useDispatch()
+  const [comments, setComments] = useState(blog.comments)
+
+  const comment = useField("text")
+
+  const handleCommenting = async (event) => {
     event.preventDefault()
+    const newComment = { content: comment.value }
+    await dispatch(commentOnBlog(blog.id, newComment))
+
+    const updatedComments = await blogsService.getCommentsById(blog.id)
+    setComments(updatedComments)
+
+    comment.reset()
   }
 
   return (
     <>
       <h2>Comments</h2>
-      <form onSubmit={() => handleCommenting()}>
-        <input type="text" name="comment" />
+      <form onSubmit={handleCommenting}>
+        <input name="comment" {...comment.setup} />
         <button type="submit"> Comment </button>
       </form>
       <ul>
-        {blog.comments.map((comment) => { return (
+        {comments.map((comment) => { return (
           <li key={comment.id}> {comment.content} </li>
         )})}
       </ul>
