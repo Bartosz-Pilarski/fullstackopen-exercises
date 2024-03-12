@@ -1,14 +1,17 @@
 import { useEffect, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import { loadUser, logoutUser } from "./reducers/userReducer"
+import { Routes, Route } from "react-router-dom"
 
 import { initializeBlogs } from "./reducers/blogsReducer"
+import { initializeUsers } from "./reducers/usersReducer"
 
-import Bloglist from "./components/Bloglist"
 import Notification from "./components/Notification"
-
 import LoginForm from "./components/LoginForm"
-import BlogForm from "./components/BlogForm"
-import { loadUser, logoutUser } from "./reducers/userReducer"
+import Menu from "./components/Menu"
+
+import Blogs from "./views/Blogs"
+import Users from "./views/Users"
 
 
 const App = () => {
@@ -19,6 +22,7 @@ const App = () => {
   //Get initial blogs and set up user if logged in
   useEffect(() => {
     dispatch(initializeBlogs())
+    dispatch(initializeUsers())
     dispatch(loadUser())
   }, [])
 
@@ -31,11 +35,14 @@ const App = () => {
   const userLoggedIn = () => {
     return(
       <div>
+        <Menu />
         <Notification />
         <h1> Hello, {user.name} </h1>
         <button onClick={() => handleLogout()}>log out</button>
-        <BlogForm />
-        <Bloglist />
+        <Routes>
+          <Route path="/" element={<Blogs/>} />
+          <Route path="/users" element={<Users/>} />
+        </Routes>
       </div>
     )
   }

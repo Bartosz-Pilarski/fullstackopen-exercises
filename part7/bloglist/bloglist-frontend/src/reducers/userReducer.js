@@ -4,6 +4,11 @@ import blogsService from "../services/blogs"
 import loginService from "../services/login"
 import { setNotification } from "./notificationReducer"
 
+/*
+  !!! this reducer handles the LOGGED IN user !!!
+  !!! for user data refer to usersReducer.js  !!!
+*/
+
 const initialState = null
 
 const userSlice = createSlice({

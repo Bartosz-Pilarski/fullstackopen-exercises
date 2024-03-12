@@ -1,3 +1,4 @@
+### keeping this due to it being login credentials for testing purposes
 POST http://localhost:3003/api/users
 Content-Type: application/json
 
@@ -6,6 +7,17 @@ Content-Type: application/json
   "name": "superuser",
   "password": "yeah"
 }
+
+###
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+  "username": "michael",
+  "name": "michael afton",
+  "password": "fivenitefredy"
+}
+
 
 ###
 DELETE http://localhost:3003/api/users/65c3cf2b4f0d5ae86244bb1d
