@@ -17,16 +17,16 @@ const parseArguments = (args: string[]): BodyStats => {
   return {
     height,
     weight
-  }
-}
+  };
+};
 
 const calculateBmi = (height: number, weight: number): BMIClass => {
-  const heightToMeters = height/100
+  const heightToMeters = height/100;
   const ratio: number = weight/(heightToMeters*heightToMeters);
   if(ratio < 18.5) return 'underweight';
   if(ratio < 25) return 'normal';
   return 'overweight';
-}
+};
 
 try {
   const { height, weight } = parseArguments(process.argv);
@@ -37,4 +37,4 @@ try {
   console.log(errMsg);
 }
 
-export default calculateBmi
+export default calculateBmi;
