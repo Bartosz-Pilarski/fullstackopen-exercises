@@ -1,6 +1,8 @@
-import { Diary } from "./types"
+import { createNewDiary } from "./diaryService"
+import { useInput } from "./hooks"
+import { Diary, Visibility, Weather } from "./types"
 
-const DiaryEntry = (props: Diary): JSX.Element => {
+export const DiaryEntry = (props: Diary): JSX.Element => {
   const style = {
     border: '2px solid black',
     margin: '15px',
@@ -16,4 +18,31 @@ const DiaryEntry = (props: Diary): JSX.Element => {
   )
 }
 
-export default DiaryEntry
+interface DiaryFormProps {
+  diaries: Diary[]
+  setDiaries: React.Dispatch<React.SetStateAction<Diary[]>>
+}
+
+export const DiaryForm = (props: DiaryFormProps): JSX.Element => {
+  const date = useInput('text');
+  const visibility = useInput('text');
+  const weather = useInput('text');
+  const comment = useInput('text');
+
+  const handleSubmit = (event: React.SyntheticEvent) => {
+    event.preventDefault();
+
+    createNewDiary({date: date.value, visibility: visibility.value as Visibility, weather: weather.value as Weather, comment: comment.value})
+    .then((res) => props.setDiaries(props.diaries.concat(res)))
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input type={date.type} onChange={date.onChange} placeholder="12-12-2012" name="date" />
+      <input type={visibility.type} onChange={visibility.onChange} placeholder="good" name="visibility" />
+      <input type={weather.type} onChange={weather.onChange} placeholder="sunny" name="weather" />
+      <input type={comment.type} onChange={comment.onChange} placeholder="been great" name="comment" />
+      <button type="submit"> Submit </button>
+    </form>
+  )
+}
