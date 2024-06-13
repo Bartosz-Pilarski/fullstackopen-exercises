@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { createNewDiary } from "./diaryService"
 import { useInput } from "./hooks"
 import { Diary, Visibility, Weather } from "./types"
@@ -24,6 +25,9 @@ interface DiaryFormProps {
 }
 
 export const DiaryForm = (props: DiaryFormProps): JSX.Element => {
+  const [errorMessage, setErrorMessage] = useState('');
+  const errorStyle = { color: 'red' };
+
   const date = useInput('text');
   const visibility = useInput('text');
   const weather = useInput('text');
@@ -33,11 +37,22 @@ export const DiaryForm = (props: DiaryFormProps): JSX.Element => {
     event.preventDefault();
 
     createNewDiary({date: date.value, visibility: visibility.value as Visibility, weather: weather.value as Weather, comment: comment.value})
-    .then((res) => props.setDiaries(props.diaries.concat(res)))
+    .then((res) => { 
+      if(res !instanceof Error) setErrorMessage(res.message);
+      else {
+        props.setDiaries(props.diaries.concat(res));
+        setErrorMessage('');
+      }
+    })
+    .catch((err) => {
+      if(err instanceof Error) setErrorMessage(err.message);
+    })
+
   }
 
   return (
     <form onSubmit={handleSubmit}>
+      {errorMessage !== '' ? <span style={errorStyle}> <b> Error: </b>  {errorMessage} <br /> </span> : <></>}
       <input type={date.type} onChange={date.onChange} placeholder="12-12-2012" name="date" />
       <input type={visibility.type} onChange={visibility.onChange} placeholder="good" name="visibility" />
       <input type={weather.type} onChange={weather.onChange} placeholder="sunny" name="weather" />

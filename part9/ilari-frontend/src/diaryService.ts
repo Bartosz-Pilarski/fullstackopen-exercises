@@ -9,8 +9,13 @@ export const getAllDiaries = () => {
     .then(res => res.data);
 }
 
-export const createNewDiary = (entry: NewDiary) => {
-  return axios
-    .post<Diary>(baseUrl, entry)
-    .then(res => res.data);
+export const createNewDiary = async (entry: NewDiary): Promise<Diary | Error> => {
+  try {
+    const res = await axios
+      .post<Diary>(baseUrl, entry);
+    return res.data;
+  } catch (err) {
+    if(axios.isAxiosError(err)) return new Error(err.response?.data);
+  }
+  return new Error('Something went wrong');
 }
