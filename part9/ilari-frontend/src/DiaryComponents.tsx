@@ -19,6 +19,27 @@ export const DiaryEntry = (props: Diary): JSX.Element => {
   )
 }
 
+interface RadioComponentProps<T> {
+  name: string,
+  values: T[],
+  state: T,
+  setState: React.Dispatch<React.SetStateAction<T>>
+}
+
+
+const RadioComponent = <T,>(props: RadioComponentProps<T>) => {
+
+  return <div>
+    <b> Visibility: </b>
+    {props.values.map((value, index) => (
+      <label key={props.name + '-' + index}>
+        <input type='radio' onChange={() => props.setState(value)} value={`${value}`} checked={props.state === value} name={props.name} />
+        {`${value}`}
+      </label>
+    ))}
+  </div>
+}
+
 interface DiaryFormProps {
   diaries: Diary[]
   setDiaries: React.Dispatch<React.SetStateAction<Diary[]>>
@@ -28,15 +49,17 @@ export const DiaryForm = (props: DiaryFormProps): JSX.Element => {
   const [errorMessage, setErrorMessage] = useState('');
   const errorStyle = { color: 'red' };
 
-  const date = useInput('text');
-  const visibility = useInput('text');
-  const weather = useInput('text');
+  const date = useInput('date');
+  const visibilityValues = Object.values(Visibility)
+  const [visibility, setVisibility] = useState(visibilityValues[0])
+  const weatherValues = Object.values(Weather)
+  const [weather, setWeather] = useState(weatherValues[0]);
   const comment = useInput('text');
 
   const handleSubmit = (event: React.SyntheticEvent) => {
     event.preventDefault();
 
-    createNewDiary({date: date.value, visibility: visibility.value as Visibility, weather: weather.value as Weather, comment: comment.value})
+    createNewDiary({date: date.value, visibility, weather, comment: comment.value})
     .then((res) => { 
       if(res !instanceof Error) setErrorMessage(res.message);
       else {
@@ -53,9 +76,11 @@ export const DiaryForm = (props: DiaryFormProps): JSX.Element => {
   return (
     <form onSubmit={handleSubmit}>
       {errorMessage !== '' ? <span style={errorStyle}> <b> Error: </b>  {errorMessage} <br /> </span> : <></>}
-      <input type={date.type} onChange={date.onChange} placeholder="12-12-2012" name="date" />
-      <input type={visibility.type} onChange={visibility.onChange} placeholder="good" name="visibility" />
-      <input type={weather.type} onChange={weather.onChange} placeholder="sunny" name="weather" />
+      <input type={date.type} onChange={date.onChange} placeholder="12-12-2012" name="date" /> <br />
+
+      <RadioComponent name="visibility" values={Object.values(Visibility)} state={visibility} setState={setVisibility} />
+      <RadioComponent name="weather" values={Object.values(Weather)} state={weather} setState={setWeather} />
+      
       <input type={comment.type} onChange={comment.onChange} placeholder="been great" name="comment" />
       <button type="submit"> Submit </button>
     </form>
